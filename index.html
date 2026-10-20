@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Nền tảng thương mại điện tử sinh viên LHU E-Commerce - Dự án nhóm 2 sinh viên">
+  <title>LHU E-Commerce | Trang chủ</title>
+  
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+  <!-- Header / Navigation -->
+  <header class="site-header" role="banner">
+    <div class="container header-container">
+      <a href="./index.html" class="brand-logo" aria-label="LHU E-Commerce Trang chủ">
+        <span class="logo-icon">LHU</span>
+        <span>E-Shop</span>
+      </a>
+
+      <!-- Mobile Menu Toggle Button -->
+      <button 
+        type="button" 
+        class="menu-toggle" 
+        id="menuToggle" 
+        aria-label="Mở menu điều hướng" 
+        aria-expanded="false"
+      >
+        ☰
+      </button>
+
+      <!-- Main Navigation with 5 planned modules -->
+      <nav class="main-nav" id="mainNav" role="navigation" aria-label="Điều hướng chính">
+        <ul class="nav-list">
+          <li><a href="./index.html" class="nav-link active">Trang chủ</a></li>
+          <li><a href="./pages/products.html" class="nav-link">Sản phẩm</a></li>
+          <li><a href="./pages/vouchers.html" class="nav-link">Voucher</a></li>
+          <li><a href="./pages/order-tracking.html" class="nav-link">Theo dõi đơn</a></li>
+          <li><a href="./pages/auction.html" class="nav-link">Đấu giá</a></li>
+        </ul>
+      </nav>
+
+      <!-- Header Quick Actions -->
+      <div class="header-actions">
+        <a href="./pages/cart.html" class="action-link" aria-label="Giỏ hàng của bạn">
+          <span>🛒</span>
+          <span>Giỏ hàng</span>
+          <span class="cart-counter" id="cartCount">0</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-content" id="mainContent">
+    <div class="container">
+      <!-- Hero / Banner Section (Redesigned 2-Column Modern UI) -->
+      <section class="hero-section" aria-label="Banner giới thiệu">
+        <div class="hero-grid">
+          <!-- Cột trái: Nội dung giới thiệu & CTA -->
+          <div class="hero-content">
+            <div class="hero-badge">
+              <span class="hero-badge-dot" aria-hidden="true"></span>
+              <span class="hero-subtitle">Nền tảng mua sắm sinh viên</span>
+            </div>
+            
+            <h1 class="hero-title">
+              Chào mừng bạn đến với<br>
+              <span class="hero-brand-name">LHU E-Commerce</span>
+            </h1>
+
+            <p class="hero-desc">
+              Không gian trao đổi đồ dùng học tập, thiết bị công nghệ, voucher ưu đãi và sàn đấu giá dành riêng cho sinh viên Đại học Lạc Hồng.
+            </p>
+
+            <div class="hero-actions">
+              <a href="./pages/products.html" class="hero-btn hero-btn-primary">
+                <span>Khám phá sản phẩm</span>
+                <span class="btn-arrow" aria-hidden="true">→</span>
+              </a>
+              <a href="./pages/auction.html" class="hero-btn hero-btn-secondary">
+                <span>Sàn đấu giá</span>
+              </a>
+            </div>
+
+            <!-- Chỉ số tin cậy ngắn gọn -->
+            <div class="hero-trust">
+              <div class="trust-item">
+                <span class="trust-check">✓</span>
+                <span>Giá sinh viên</span>
+              </div>
+              <div class="trust-item">
+                <span class="trust-check">✓</span>
+                <span>Đấu giá minh bạch</span>
+              </div>
+              <div class="trust-item">
+                <span class="trust-check">✓</span>
+                <span>Giao nhận nội bộ LHU</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Cột phải: Showcase thẻ nổi bật cân bằng thị giác -->
+          <div class="hero-showcase" aria-hidden="true">
+            <div class="showcase-card showcase-card-main">
+              <div class="showcase-img-wrap">
+                <img 
+                  src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=600&q=80" 
+                  alt="Balo Sinh Viên LHU" 
+                  class="showcase-img"
+                  loading="lazy"
+                />
+                <span class="showcase-tag">Sản phẩm LHU</span>
+              </div>
+              <div class="showcase-details">
+                <div class="showcase-rating">★ 4.8 <span>(36 đánh giá)</span></div>
+                <div class="showcase-name">Balo LHU Chống Nước 2026</div>
+                <div class="showcase-price">249.000 ₫ <span class="showcase-old-price">320.000 ₫</span></div>
+              </div>
+            </div>
+
+            <!-- Thẻ nổi bật phụ nổi đè tạo chiều sâu UI -->
+            <div class="showcase-floating-card">
+              <div class="floating-icon">⚡</div>
+              <div class="floating-info">
+                <strong>Voucher Sinh Viên</strong>
+                <span>Giảm đến 30% hôm nay</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Danh mục sản phẩm -->
+      <section class="categories-section" aria-labelledby="catHeading">
+        <header class="section-header">
+          <div>
+            <h2 class="section-title" id="catHeading">Danh mục sản phẩm</h2>
+            <p class="section-subtitle">Tìm kiếm đồ dùng phù hợp theo nhu cầu học tập và sinh hoạt</p>
+          </div>
+        </header>
+        <div class="category-grid" id="categoryList">
+          <!-- Render tự động bởi js/pages/home.js -->
+        </div>
+      </section>
+
+      <!-- Sản phẩm nổi bật -->
+      <section class="featured-section" aria-labelledby="featuredHeading">
+        <header class="section-header">
+          <div>
+            <h2 class="section-title" id="featuredHeading">Sản phẩm nổi bật</h2>
+            <p class="section-subtitle">Các vật phẩm công nghệ & học tập được chọn lọc chất lượng cao</p>
+          </div>
+          <a href="./pages/products.html" class="btn btn-outline">Xem tất cả</a>
+        </header>
+        <div class="product-grid" id="featuredProducts">
+          <!-- Render tự động bởi js/pages/home.js -->
+        </div>
+      </section>
+
+      <!-- Giới thiệu 5 Phân hệ dự án -->
+      <section class="modules-preview" aria-labelledby="modulesHeading">
+        <h2 id="modulesHeading" style="font-size: var(--font-size-xl); margin-bottom: var(--spacing-xs);">
+          Định hướng 5 Phân hệ cốt lõi
+        </h2>
+        <p style="color: var(--gray-600); font-size: var(--font-size-sm);">
+          Hệ thống được thiết kế theo kiến trúc module hóa với các phân hệ dự kiến:
+        </p>
+        <div class="modules-grid">
+          <div class="module-item">
+            <h4>1. Mua sắm & Giỏ hàng</h4>
+            <span class="badge badge-primary">Khung cơ bản</span>
+            <p>Duyệt danh mục, quản lý giỏ hàng và lưu trữ trạng thái với LocalStorage.</p>
+          </div>
+          <div class="module-item">
+            <h4>2. Đánh giá sản phẩm</h4>
+            <span class="badge badge-dev">Đang phát triển</span>
+            <p>Hệ thống xếp hạng sao và bình luận phản hồi cho từng sản phẩm.</p>
+          </div>
+          <div class="module-item">
+            <h4>3. Hệ thống Voucher</h4>
+            <span class="badge badge-dev">Đang phát triển</span>
+            <p>Thu thập và áp dụng mã giảm giá sinh viên trong quá trình mua sắm.</p>
+          </div>
+          <div class="module-item">
+            <h4>4. Theo dõi đơn hàng</h4>
+            <span class="badge badge-dev">Đang phát triển</span>
+            <p>Tra cứu tiến độ và lịch sử trạng thái đơn hàng theo mã đặt hàng.</p>
+          </div>
+          <div class="module-item">
+            <h4>5. Sàn đấu giá</h4>
+            <span class="badge badge-dev">Đang phát triển</span>
+            <p>Không gian đấu giá vật phẩm sinh viên với cơ chế bước giá minh bạch.</p>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h4 style="display: flex; align-items: center; gap: 8px;">
+            <span class="logo-icon" style="display: inline-block; padding: 2px 6px; background: var(--primary); border-radius: 4px;">LHU</span>
+            LHU E-Commerce
+          </h4>
+          <p style="font-size: var(--font-size-sm); margin-top: var(--spacing-sm); line-height: 1.6;">
+            Dự án bài tập lớn Web Frontend của nhóm 2 sinh viên trường Đại học Lạc Hồng. Ứng dụng công nghệ Web thuần chuẩn hiện đại.
+          </p>
+        </div>
+        <div class="footer-col">
+          <h4>Phân hệ</h4>
+          <ul>
+            <li><a href="./pages/products.html">Mua sắm</a></li>
+            <li><a href="./pages/cart.html">Giỏ hàng</a></li>
+            <li><a href="./pages/vouchers.html">Kho Voucher</a></li>
+            <li><a href="./pages/auction.html">Sàn Đấu giá</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Tra cứu</h4>
+          <ul>
+            <li><a href="./pages/order-tracking.html">Theo dõi đơn hàng</a></li>
+            <li><a href="./docs/architecture.md" target="_blank">Tài liệu kiến trúc</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Nhóm phát triển</h4>
+          <ul>
+            <li>Sinh viên: Nhóm 2 thành viên</li>
+            <li>Khoa: Công nghệ Thông tin - LHU</li>
+            <li>Phiên bản: 0.1.0-alpha</li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 LHU E-Commerce. Thiết kế với HTML5, CSS3 & ES Modules.</p>
+        <p>Tương thích hoàn toàn với GitHub Pages.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Main JavaScript (ES Module) -->
+  <script type="module" src="./js/main.js"></script>
+</body>
+</html>
