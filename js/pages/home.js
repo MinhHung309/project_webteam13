@@ -55,15 +55,14 @@ export function renderFeaturedProducts(container) {
             <span class="price-current">${formatCurrency(product.price)}</span>
             ${product.originalPrice ? `<span class="price-original">${formatCurrency(product.originalPrice)}</span>` : ""}
           </div>
-          <button 
-            type="button" 
+          <a 
+            href="./pages/product-detail.html?id=${product.id}" 
             class="btn btn-outline btn-sm" 
             data-action="view-details"
-            onclick="alert('Chức năng xem chi tiết và giỏ hàng đang được nhóm phát triển!')"
-            aria-label="Xem chi tiết ${product.name}"
+            aria-label="Xem chi tiết và đánh giá ${product.name}"
           >
             Chi tiết
-          </button>
+          </a>
         </div>
       </div>
     </article>
