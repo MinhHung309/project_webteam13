@@ -3,18 +3,35 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tất cả sản phẩm | LHU E-Commerce</title>
+  <meta name="description" content="Khám phá và mua sắm sản phẩm dành cho sinh viên LHU - Thiết bị, sách giáo trình, đồng phục và phụ kiện chính hãng">
+  <title>Tất cả sản phẩm | LHU E-Commerce Hub</title>
+  
+  <!-- CSS Stylesheets -->
   <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/catalog.css">
 </head>
 <body>
-  <header class="site-header">
+  <!-- Header / Navigation -->
+  <header class="site-header" role="banner">
     <div class="container header-container">
-      <a href="../index.html" class="brand-logo">
+      <a href="../index.html" class="brand-logo" aria-label="LHU E-Commerce Trang chủ">
         <span class="logo-icon">LHU</span>
         <span>E-Shop</span>
       </a>
-      <button type="button" class="menu-toggle" id="menuToggle" aria-label="Menu">☰</button>
-      <nav class="main-nav" id="mainNav">
+
+      <!-- Mobile Menu Toggle Button -->
+      <button 
+        type="button" 
+        class="menu-toggle" 
+        id="menuToggle" 
+        aria-label="Mở menu điều hướng" 
+        aria-expanded="false"
+      >
+        ☰
+      </button>
+
+      <!-- Main Navigation -->
+      <nav class="main-nav" id="mainNav" role="navigation" aria-label="Điều hướng chính">
         <ul class="nav-list">
           <li><a href="../index.html" class="nav-link">Trang chủ</a></li>
           <li><a href="./products.html" class="nav-link active">Sản phẩm</a></li>
@@ -23,8 +40,10 @@
           <li><a href="./auction.html" class="nav-link">Đấu giá</a></li>
         </ul>
       </nav>
+
+      <!-- Header Quick Actions -->
       <div class="header-actions">
-        <a href="./cart.html" class="action-link">
+        <a href="./cart.html" class="action-link" aria-label="Giỏ hàng của bạn">
           <span>🛒</span>
           <span>Giỏ hàng</span>
           <span class="cart-counter" id="cartCount">0</span>
@@ -33,20 +52,184 @@
     </div>
   </header>
 
-  <main class="main-content">
-    <div class="container placeholder-page">
-      <div class="placeholder-card">
-        <div class="placeholder-icon">📦</div>
-        <h1>Danh Sách Sản Phẩm & Đánh Giá</h1>
-        <p>Phân hệ hiển thị bộ lọc sản phẩm, tìm kiếm và đánh giá chi tiết của sinh viên đang được nhóm xây dựng trong giai đoạn tiếp theo.</p>
-        <span class="badge badge-dev" style="margin-bottom: var(--spacing-lg);">Phân hệ 1 & 2: Đang phát triển</span>
-        <div>
-          <a href="../index.html" class="btn btn-primary">Quay lại Trang chủ</a>
-        </div>
+  <!-- Main Content Area -->
+  <main class="main-content catalog-page" id="mainContent">
+    <div class="container">
+      <!-- Breadcrumb Navigation -->
+      <nav aria-label="Breadcrumb" style="margin-bottom: var(--spacing-md); font-size: var(--font-size-xs); color: var(--gray-600);">
+        <a href="../index.html" style="color: var(--primary); text-decoration: none;">Trang chủ</a>
+        <span style="margin: 0 6px;">/</span>
+        <span style="color: var(--gray-800); font-weight: 600;">Cửa hàng sản phẩm</span>
+      </nav>
+
+      <!-- Page Header -->
+      <header class="catalog-header">
+        <h1 class="catalog-title">Tất Cả Sản Phẩm LHU</h1>
+        <p class="catalog-subtitle">Đồng phục, thiết bị học tập công nghệ, giáo trình chính hãng phục vụ sinh viên Đại học Lạc Hồng</p>
+      </header>
+
+      <!-- 2-Column Catalog Layout: Sidebar Filters + Main Grid -->
+      <div class="catalog-layout">
+        <!-- Sidebar Filters -->
+        <aside class="catalog-sidebar" id="catalogSidebar" aria-label="Bộ lọc sản phẩm">
+          <div class="sidebar-header">
+            <h2 class="sidebar-title">
+              <span>🎯</span>
+              <span>Bộ lọc tìm kiếm</span>
+            </h2>
+            <button type="button" class="btn-reset-filters" id="btnResetFilters">Xóa tất cả</button>
+          </div>
+
+          <!-- Group 1: Tìm kiếm từ khóa -->
+          <div class="filter-group">
+            <label for="catalogSearchInput" class="filter-group-title">Tìm kiếm sản phẩm</label>
+            <div class="catalog-search-wrap">
+              <input 
+                type="text" 
+                id="catalogSearchInput" 
+                class="catalog-search-input" 
+                placeholder="Nhập tên balo, chuột, giáo trình..."
+                autocomplete="off"
+              />
+              <button type="button" id="catalogSearchClear" class="catalog-search-clear" aria-label="Xóa từ khóa tìm kiếm">✕</button>
+            </div>
+          </div>
+
+          <!-- Group 2: Danh mục sản phẩm -->
+          <div class="filter-group">
+            <span class="filter-group-title">Danh mục</span>
+            <ul class="filter-options-list" id="categoryFilterOptions">
+              <!-- Render động từ js/pages/products.js -->
+            </ul>
+          </div>
+
+          <!-- Group 3: Khoảng giá -->
+          <div class="filter-group">
+            <span class="filter-group-title">Khoảng giá (VND)</span>
+            <ul class="filter-options-list" id="priceFilterOptions">
+              <li>
+                <label class="filter-option-label is-active">
+                  <span class="filter-option-left">
+                    <input type="radio" name="priceFilter" value="all" checked>
+                    <span class="filter-option-text">Tất cả mức giá</span>
+                  </span>
+                </label>
+              </li>
+              <li>
+                <label class="filter-option-label">
+                  <span class="filter-option-left">
+                    <input type="radio" name="priceFilter" value="under-100k">
+                    <span class="filter-option-text">Dưới 100.000 ₫</span>
+                  </span>
+                </label>
+              </li>
+              <li>
+                <label class="filter-option-label">
+                  <span class="filter-option-left">
+                    <input type="radio" name="priceFilter" value="100k-300k">
+                    <span class="filter-option-text">100.000 ₫ - 300.000 ₫</span>
+                  </span>
+                </label>
+              </li>
+              <li>
+                <label class="filter-option-label">
+                  <span class="filter-option-left">
+                    <input type="radio" name="priceFilter" value="300k-500k">
+                    <span class="filter-option-text">300.000 ₫ - 500.000 ₫</span>
+                  </span>
+                </label>
+              </li>
+              <li>
+                <label class="filter-option-label">
+                  <span class="filter-option-left">
+                    <input type="radio" name="priceFilter" value="over-500k">
+                    <span class="filter-option-text">Trên 500.000 ₫</span>
+                  </span>
+                </label>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Group 4: Tình trạng hàng -->
+          <div class="filter-group">
+            <span class="filter-group-title">Tình trạng</span>
+            <ul class="filter-options-list">
+              <li>
+                <label class="filter-option-label">
+                  <span class="filter-option-left">
+                    <input type="checkbox" id="filterInStock">
+                    <span class="filter-option-text">Chỉ hiển thị còn hàng</span>
+                  </span>
+                </label>
+              </li>
+            </ul>
+          </div>
+        </aside>
+
+        <!-- Main Product Area -->
+        <section class="catalog-main" aria-label="Danh sách kết quả">
+          <!-- Toolbar & Sắp xếp -->
+          <div class="catalog-toolbar">
+            <div style="display: flex; align-items: center; gap: var(--spacing-sm);">
+              <button type="button" class="mobile-filter-toggle" id="mobileFilterToggle">
+                <span>🔍</span>
+                <span>Bộ lọc sản phẩm</span>
+              </button>
+              <p class="catalog-results-count">
+                Hiển thị <strong id="resultsCount">0</strong> sản phẩm
+              </p>
+            </div>
+
+            <div class="catalog-sort-wrap">
+              <label for="catalogSortSelect" class="catalog-sort-label">Sắp xếp theo:</label>
+              <select id="catalogSortSelect" class="catalog-sort-select">
+                <option value="default">Mặc định (Nổi bật nhất)</option>
+                <option value="price-asc">Giá: Thấp đến Cao</option>
+                <option value="price-desc">Giá: Cao đến Thấp</option>
+                <option value="rating-desc">Đánh giá cao nhất</option>
+                <option value="name-asc">Tên: A đến Z</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Active Filter Badges Bar -->
+          <div class="active-filters-bar" id="activeFiltersBar" style="display: none;"></div>
+
+          <!-- Product Cards Grid -->
+          <div class="product-grid" id="catalogProductGrid">
+            <!-- Render động bằng js/pages/products.js -->
+          </div>
+
+          <!-- Empty State (Khi không có sản phẩm khớp bộ lọc) -->
+          <div class="catalog-empty-state" id="catalogEmptyState" style="display: none;">
+            <div class="catalog-empty-icon">🔍</div>
+            <h3 class="catalog-empty-title">Không tìm thấy sản phẩm phù hợp</h3>
+            <p class="catalog-empty-desc">
+              Rất tiếc, không có sản phẩm nào khớp với tiêu chí tìm kiếm hoặc bộ lọc hiện tại của bạn. Vui lòng thử tìm từ khóa khác hoặc đặt lại bộ lọc.
+            </p>
+            <button type="button" class="btn btn-primary" onclick="document.getElementById('btnResetFilters').click();">
+              Xóa tất cả bộ lọc
+            </button>
+          </div>
+        </section>
       </div>
     </div>
   </main>
 
-  <script type="module" src="../js/main.js"></script>
+  <!-- Footer -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-bottom">
+        <p>&copy; 2026 LHU E-Commerce Hub - Đồ án Phát triển Ứng dụng Web.</p>
+        <p>Phân hệ Cửa hàng & Giỏ hàng sinh viên Đại học Lạc Hồng.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Toast Notification Container góc phải dưới -->
+  <div class="voucher-toast-container" id="catalogToastContainer" aria-live="polite"></div>
+
+  <!-- Page Logic Module -->
+  <script type="module" src="../js/pages/products.js"></script>
 </body>
 </html>

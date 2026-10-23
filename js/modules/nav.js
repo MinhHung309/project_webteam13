@@ -1,13 +1,27 @@
 /**
- * Module quản lý Header, Mobile Navigation và trạng thái giỏ hàng ban đầu
+ * Module quản lý Header, Mobile Navigation và đồng bộ trạng thái giỏ hàng (Cart Badge)
  */
 
-import { getStorageItem, STORAGE_KEYS } from "../utils/storage.js";
+import { STORAGE_KEYS } from "../utils/storage.js";
+import { getCartTotalQuantity, CART_UPDATED_EVENT } from "../utils/cart.js";
 
+/**
+ * Cập nhật số lượng hiển thị trên icon giỏ hàng (cart badge)
+ */
+export function updateCartBadge() {
+  const cartCountEl = document.getElementById("cartCount");
+  if (!cartCountEl) return;
+
+  const totalQty = getCartTotalQuantity();
+  cartCountEl.textContent = totalQty;
+}
+
+/**
+ * Khởi tạo navigation, sự kiện menu mobile và đồng bộ badge giỏ hàng thời gian thực
+ */
 export function initNavigation() {
   const menuToggle = document.getElementById("menuToggle");
   const mainNav = document.getElementById("mainNav");
-  const cartCountEl = document.getElementById("cartCount");
 
   if (menuToggle && mainNav) {
     menuToggle.addEventListener("click", () => {
@@ -17,12 +31,18 @@ export function initNavigation() {
     });
   }
 
-  // Cập nhật số lượng giỏ hàng hiển thị từ localStorage (mặc định 0)
-  if (cartCountEl) {
-    const cart = getStorageItem(STORAGE_KEYS.CART, []);
-    const totalQty = Array.isArray(cart) 
-      ? cart.reduce((acc, item) => acc + (item.quantity || 1), 0)
-      : 0;
-    cartCountEl.textContent = totalQty;
-  }
+  // 1. Cập nhật số lượng giỏ hàng ban đầu khi tải trang
+  updateCartBadge();
+
+  // 2. Lắng nghe CustomEvent khi giỏ hàng được thêm/sửa/xóa trong cùng tab
+  window.addEventListener(CART_UPDATED_EVENT, () => {
+    updateCartBadge();
+  });
+
+  // 3. Lắng nghe storage event khi giỏ hàng được thay đổi từ một tab trình duyệt khác
+  window.addEventListener("storage", (event) => {
+    if (event.key === STORAGE_KEYS.CART) {
+      updateCartBadge();
+    }
+  });
 }
