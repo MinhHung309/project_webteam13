@@ -106,9 +106,14 @@ function normalizeOrder(rawOrder) {
     toNonNegativeNumber(rawOrder.voucherApplied?.discountAmount, 0)
   );
   const shippingFee = toNonNegativeNumber(rawOrder.shippingFee ?? rawOrder.pricing?.shippingFee, 0);
+  const shippingDiscount = toNonNegativeNumber(
+    rawOrder.shippingDiscount ?? rawOrder.voucherApplied?.shippingDiscount,
+    0
+  );
+  const taxAmount = toNonNegativeNumber(rawOrder.taxAmount ?? rawOrder.pricing?.taxAmount, 0);
   const total = toNonNegativeNumber(
     rawOrder.total ?? rawOrder.pricing?.totalAmount,
-    Math.max(0, subtotal - discount + shippingFee)
+    Math.max(0, subtotal - discount + taxAmount + shippingFee - shippingDiscount)
   );
   const rawHistory = Array.isArray(rawOrder.statusHistory)
     ? rawOrder.statusHistory
@@ -134,6 +139,8 @@ function normalizeOrder(rawOrder) {
     subtotal,
     discount,
     shippingFee,
+    shippingDiscount,
+    taxAmount,
     total,
     shippingAddress: typeof rawOrder.shippingAddress === "string"
       ? rawOrder.shippingAddress
@@ -273,6 +280,8 @@ function renderOrder(order) {
             <div><dt>Tạm tính</dt><dd>${formatCurrency(order.subtotal)}</dd></div>
             <div><dt>Giảm giá</dt><dd>− ${formatCurrency(order.discount)}</dd></div>
             <div><dt>Phí vận chuyển</dt><dd>${formatCurrency(order.shippingFee)}</dd></div>
+            ${order.shippingDiscount > 0 ? `<div><dt>Giảm phí vận chuyển</dt><dd>− ${formatCurrency(order.shippingDiscount)}</dd></div>` : ""}
+            ${order.taxAmount > 0 ? `<div><dt>Thuế</dt><dd>${formatCurrency(order.taxAmount)}</dd></div>` : ""}
             <div class="order-total"><dt>Tổng tiền</dt><dd>${formatCurrency(order.total)}</dd></div>
           </dl>
         </section>

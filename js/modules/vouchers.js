@@ -214,6 +214,34 @@ export function calculateVoucherDiscount(voucherOrCode, subtotal = 0, shippingFe
     };
   }
 
+  const validFrom = voucher.validFrom ? new Date(voucher.validFrom).getTime() : NaN;
+  if (voucher.validFrom && !Number.isFinite(validFrom)) {
+    return {
+      valid: false,
+      message: `Thời gian áp dụng của voucher "${voucher.code}" không hợp lệ.`,
+      voucher,
+      subtotal: numSubtotal,
+      shippingFee: numShipping,
+      discountAmount: 0,
+      shippingDiscount: 0,
+      finalShippingFee: numShipping,
+      finalTotal: numSubtotal + numShipping
+    };
+  }
+  if (Number.isFinite(validFrom) && Date.now() < validFrom) {
+    return {
+      valid: false,
+      message: `Voucher "${voucher.code}" chưa đến thời gian áp dụng.`,
+      voucher,
+      subtotal: numSubtotal,
+      shippingFee: numShipping,
+      discountAmount: 0,
+      shippingDiscount: 0,
+      finalShippingFee: numShipping,
+      finalTotal: numSubtotal + numShipping
+    };
+  }
+
   // 2. Kiểm tra điều kiện giá trị đơn tối thiểu (minOrderAmount)
   const minRequired = voucher.minOrderAmount || 0;
   if (numSubtotal < minRequired) {
