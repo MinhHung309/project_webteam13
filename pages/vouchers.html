@@ -57,7 +57,7 @@
                 <span class="voucher-stat-number" id="statValidCount">0</span>
                 <span class="voucher-stat-label">Mã đang có hiệu lực</span>
               </div>
-              <div class="voucher-stat-item">
+              <div class="voucher-stat-item clickable" id="statSavedItem" role="button" tabindex="0" title="Bấm để xem Ví Voucher của bạn">
                 <span class="voucher-stat-number" id="statSavedCount">0</span>
                 <span class="voucher-stat-label">Đã lưu trong Ví của bạn</span>
               </div>
@@ -87,11 +87,11 @@
       <!-- THANH CÔNG CỤ: TÌM KIẾM, TABS VÍ CỦA TÔI & LỌC TRẠNG THÁI -->
       <div class="voucher-toolbar">
         <div class="voucher-tabs-group" role="tablist">
-          <button type="button" class="voucher-tab-btn active" id="tabAllVouchers" role="tab" aria-selected="true">
+          <button type="button" class="voucher-tab-btn active" id="tabAllVouchers" data-tab="all" role="tab" aria-selected="true">
             <span>🎟️ Kho Voucher Chung</span>
             <span class="tab-badge-counter" id="badgeAllCount">0</span>
           </button>
-          <button type="button" class="voucher-tab-btn" id="tabMyWallet" role="tab" aria-selected="false">
+          <button type="button" class="voucher-tab-btn" id="tabMyWallet" data-tab="wallet" role="tab" aria-selected="false">
             <span>💼 Ví Voucher Của Tôi</span>
             <span class="tab-badge-counter" id="badgeWalletCount">0</span>
           </button>

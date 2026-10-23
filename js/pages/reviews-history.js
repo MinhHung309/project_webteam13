@@ -50,7 +50,7 @@ function renderHistoryList() {
 
   if (historyFilter === "user_only") {
     reviews = reviews.filter(r => r.isUserCreated);
-  } else if (historyFilter === "demo_only") {
+  } else if (historyFilter === "community_only") {
     reviews = reviews.filter(r => !r.isUserCreated);
   }
 
@@ -75,7 +75,7 @@ function renderHistoryList() {
 
     const badgeHtml = rev.isUserCreated 
       ? `<span class="review-badge-user">Đánh giá của bạn</span>` 
-      : `<span class="review-badge-demo">Đánh giá mẫu (Demo)</span>`;
+      : "";
 
     return `
       <article class="review-item-card">

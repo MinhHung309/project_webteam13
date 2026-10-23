@@ -27,15 +27,38 @@ document.addEventListener("DOMContentLoaded", () => {
   // 2. Khởi tạo dữ liệu voucher trong LocalStorage
   initVouchersStorage();
 
-  // 3. Render số liệu thống kê & danh sách voucher
+  // 3. Đọc query params từ URL (?tab=wallet hoặc ?filter=saved)
+  parseVoucherQueryParams();
+
+  // 4. Render số liệu thống kê & danh sách voucher
   updateVoucherStats();
   renderVouchers();
 
-  // 4. Đăng ký các sự kiện tương tác
+  // 5. Đăng ký các sự kiện tương tác
   setupTabEvents();
   setupFilterEvents();
   setupSearchEvents();
+  setupBannerStatsEvents();
 });
+
+/**
+ * Đọc tham số từ URL nếu người dùng truy cập trực tiếp bằng liên kết ví voucher
+ */
+function parseVoucherQueryParams() {
+  const params = new URLSearchParams(window.location.search);
+  const tabParam = params.get("tab");
+  const filterParam = params.get("filter");
+
+  if (tabParam === "wallet") {
+    activeTab = "wallet";
+  } else if (tabParam === "all") {
+    activeTab = "all";
+  }
+
+  if (filterParam && ["all", "valid", "saved", "expired"].includes(filterParam)) {
+    activeStatusFilter = filterParam;
+  }
+}
 
 /**
  * Cập nhật các con số thống kê trên banner và badge tab
@@ -56,6 +79,24 @@ function updateVoucherStats() {
   if (totalSavedEl) totalSavedEl.textContent = savedVouchers.length;
   if (tabWalletCountEl) tabWalletCountEl.textContent = savedVouchers.length;
   if (tabAllCountEl) tabAllCountEl.textContent = allVouchers.length;
+
+  // Cập nhật trạng thái active trực quan của 2 Tab
+  const tabAll = document.getElementById("tabAllVouchers");
+  const tabWallet = document.getElementById("tabMyWallet");
+  if (tabAll) {
+    tabAll.classList.toggle("active", activeTab === "all");
+    tabAll.setAttribute("aria-selected", activeTab === "all" ? "true" : "false");
+  }
+  if (tabWallet) {
+    tabWallet.classList.toggle("active", activeTab === "wallet");
+    tabWallet.setAttribute("aria-selected", activeTab === "wallet" ? "true" : "false");
+  }
+
+  // Ẩn/hiện bộ lọc trạng thái (Pills) tùy theo tab
+  const filterPillsContainer = document.getElementById("voucherFilterPills");
+  if (filterPillsContainer) {
+    filterPillsContainer.style.display = activeTab === "wallet" ? "none" : "flex";
+  }
 }
 
 /**
@@ -411,9 +452,19 @@ function fallbackCopyText(text) {
 function switchTab(tabName) {
   activeTab = tabName;
 
-  document.querySelectorAll(".voucher-nav-tab").forEach(tab => {
-    tab.classList.toggle("active", tab.dataset.tab === tabName);
-  });
+  // Cập nhật trạng thái class và aria-selected của 2 tab button
+  const tabAll = document.getElementById("tabAllVouchers");
+  const tabWallet = document.getElementById("tabMyWallet");
+
+  if (tabAll) {
+    tabAll.classList.toggle("active", tabName === "all");
+    tabAll.setAttribute("aria-selected", tabName === "all" ? "true" : "false");
+  }
+
+  if (tabWallet) {
+    tabWallet.classList.toggle("active", tabName === "wallet");
+    tabWallet.setAttribute("aria-selected", tabName === "wallet" ? "true" : "false");
+  }
 
   // Khi chuyển sang tab "Ví của tôi", ẩn bộ lọc pills; khi ở kho chung thì hiện lại
   const filterPillsContainer = document.getElementById("voucherFilterPills");
@@ -425,17 +476,44 @@ function switchTab(tabName) {
 }
 
 /**
- * Đăng ký sự kiện chuyển Tab
+ * Đăng ký sự kiện chuyển Tab (Kho Voucher Chung vs Ví Voucher Của Tôi)
  */
 function setupTabEvents() {
-  document.querySelectorAll(".voucher-nav-tab").forEach(tab => {
-    tab.addEventListener("click", () => {
-      const targetTab = tab.dataset.tab;
-      if (targetTab && targetTab !== activeTab) {
-        switchTab(targetTab);
+  const tabAll = document.getElementById("tabAllVouchers");
+  const tabWallet = document.getElementById("tabMyWallet");
+
+  if (tabAll) {
+    tabAll.addEventListener("click", () => {
+      if (activeTab !== "all") {
+        switchTab("all");
       }
     });
-  });
+  }
+
+  if (tabWallet) {
+    tabWallet.addEventListener("click", () => {
+      if (activeTab !== "wallet") {
+        switchTab("wallet");
+      }
+    });
+  }
+}
+
+/**
+ * Đăng ký sự kiện click cho ô thống kê "Đã lưu trong Ví của bạn" trên banner
+ */
+function setupBannerStatsEvents() {
+  const statSavedBox = document.getElementById("statSavedItem");
+  if (statSavedBox) {
+    statSavedBox.addEventListener("click", () => {
+      switchTab("wallet");
+      // Cuộn êm đến thanh công cụ voucher
+      const toolbar = document.querySelector(".voucher-toolbar");
+      if (toolbar) {
+        toolbar.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    });
+  }
 }
 
 /**
