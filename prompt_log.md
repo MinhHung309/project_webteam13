@@ -125,6 +125,63 @@
 - `js/utils/storage.js`: Mở rộng toàn bộ `STORAGE_KEYS` cho 5 phân hệ, bổ sung hàm `initializeStorageItem` và xử lý an toàn lỗi `QuotaExceededError`.
 - `docs/data_architecture.md`: Bản đặc tả chi tiết toàn bộ Schema, sơ đồ Mermaid giao tiếp giữa các module, danh sách hàm giao tiếp và 6 test cases chuẩn.
 
+---
 
+## Prompt 03 — Phân hệ Theo dõi đơn hàng
+**Ngày thực hiện**: 23/10/2026
+**Mục tiêu**: Hoàn thiện tra cứu đơn hàng và lịch sử mua hàng demo, dùng lại khóa lưu `lhu_orders` và giữ nguyên dữ liệu các phân hệ khác.
 
+### 1. File tạo mới và chỉnh sửa
+- Tạo `js/pages/order-tracking.js`: kiểm tra/chuẩn hóa dữ liệu đơn hàng hiện có và legacy, tra cứu mã không tải lại trang, hiển thị timeline trạng thái, đếm ngược giao hàng và lọc lịch sử.
+- Chỉnh `pages/order-tracking.html`: thay placeholder bằng khu vực tra cứu, kết quả chi tiết và lịch sử mua hàng có nhãn dữ liệu demo.
+- Chỉnh `js/data/orders.js`: thêm năm đơn demo `LHU-2026-001` đến `LHU-2026-005` với dữ liệu và lịch sử trạng thái nhất quán; giữ lại các đơn legacy.
+- Chỉnh `css/components.css`: bổ sung style riêng responsive cho trang, timeline trạng thái và lịch sử.
+- Chỉnh `docs/data_architecture.md`: ghi lại cách tương thích schema legacy, snapshot giá và điểm tích hợp checkout tương lai.
 
+### 2. Luồng hoạt động
+- Lần đầu truy cập, dữ liệu mẫu được lưu ở `lhu_orders`; các lần sau chỉ bổ sung mã demo còn thiếu, không ghi đè đơn đang có.
+- Trang chuẩn hóa cả schema mới và schema legacy; đơn lỗi được bỏ qua có cảnh báo và không dùng giá sản phẩm/voucher hiện tại để tính lại tổng tiền.
+- Tra cứu bằng nút hoặc Enter, bỏ khoảng trắng thừa, hiển thị trạng thái lỗi rõ ràng khi trống/không tìm thấy; lịch sử hỗ trợ tìm mã, lọc trạng thái và mở đơn đã chọn.
+- Countdown cập nhật mỗi giây, được dọn trước lần tra cứu mới và khi rời trang; đơn giao thành công hiển thị thông báo hoàn tất, đơn hủy ẩn countdown và không hiển thị tiếp các mốc giao hàng.
+- Checkout chưa có trong repository; cần tích hợp sau bằng cách lưu snapshot đơn hoàn tất vào `lhu_orders`. Không chỉnh giỏ hàng hoặc công thức voucher.
+
+---
+
+### 3. Dữ liệu demo và kiểm thử
+- Trạng thái mẫu: `LHU-2026-001` đang vận chuyển; `LHU-2026-002` đã xác nhận; `LHU-2026-003` đã giao; `LHU-2026-004` đang chuẩn bị; `LHU-2026-005` đã hủy.
+- `git diff --check`: đạt, không phát hiện lỗi khoảng trắng trong diff.
+- Chưa chạy test tương tác trình duyệt, responsive hoặc đối chiếu Cart/Review/Voucher; không đánh dấu các test này đạt khi chưa thực thi.
+
+---
+
+## Prompt 04 — Phân hệ Online Auction
+**Ngày thực hiện**: 23/10/2026
+**Mục tiêu**: Hoàn thiện sàn đấu giá demo tích hợp vào website hiện có; giữ nguyên dữ liệu và nghiệp vụ các phân hệ khác.
+
+### 1. File tạo mới và chỉnh sửa
+- Tạo `pages/auction-detail.html` và `pages/my-auctions.html`; thay nội dung placeholder tại `pages/auction.html` bằng danh sách phiên, tìm kiếm, lọc trạng thái và sắp xếp.
+- Tạo `js/data/auction-demo.js` với sáu phiên demo có thời gian tương đối tại lần khởi tạo.
+- Tạo `js/modules/auction.js` để chuẩn hóa dữ liệu, lưu biệt lập bằng `lhu_auction_sessions_v1`, tính trạng thái theo thời gian và kiểm tra/lưu giá đặt.
+- Tạo `js/pages/auction-list.js`, `js/pages/auction-detail.js`, `js/pages/my-auctions.js` và `css/auction.css` cho giao diện responsive, countdown, lịch sử và kết quả người dùng demo.
+- Không sửa `js/data/auctions.js` hay khóa cũ `lhu_auctions`; không thay đổi Cart, Review, Voucher hoặc Order Tracking.
+
+### 2. Cấu trúc dữ liệu và quy tắc đặt giá
+- Mỗi phiên gồm `id`, `productId`, `title`, `description`, `image`, `startingPrice`, `currentPrice`, `minimumIncrement`, `startTime`, `endTime`, `highestBidder` và `bidHistory`; trạng thái được tính từ `startTime`/`endTime`, không lưu trạng thái có thể hết hạn.
+- Định danh `lhu-demo-user` ổn định trong trình duyệt. Giá phải là số nguyên an toàn, hữu hạn và dương; phải vượt giá hiện tại, đạt ít nhất `currentPrice + minimumIncrement`, phiên phải đang diễn ra và người dùng không được tự nâng giá khi đang dẫn đầu.
+- Giá hiện tại và người dẫn đầu được chuẩn hóa từ mức giá cao nhất trong lịch sử. JSON hỏng/bản ghi không hợp lệ không ghi đè dữ liệu có sẵn; lỗi ghi localStorage được thông báo.
+- Countdown tính lại từ timestamp tuyệt đối mỗi giây, cập nhật trạng thái khi hết hạn, và interval được dọn khi không còn cần thiết hoặc rời trang. Các tab cùng origin lắng nghe sự kiện `storage`.
+
+### 3. Lỗi/điểm được khắc phục
+- Dữ liệu auction legacy chỉ có hai phiên và thời điểm cố định; giữ nguyên schema cũ nhưng tách dữ liệu demo mới, tránh phiên mẫu đồng loạt hết hạn hoặc ghi đè storage cũ.
+- Tránh việc refresh làm đặt lại giá/lịch sử: khởi tạo một lần và tái sử dụng phiên đã lưu; trạng thái luôn được tính lại từ thời gian bắt đầu/kết thúc.
+- Chặn giá thập phân/không hữu hạn/không hợp lệ, giá dưới bước tối thiểu, tự nâng giá khi đang dẫn đầu và đặt giá sau hạn; đối chiếu current price với lịch sử đã lưu.
+- Dùng `textContent`/DOM API khi render dữ liệu động để không diễn giải tên người đặt giá hoặc nội dung phiên thành HTML.
+
+### 4. Kiểm thử đã thực hiện
+- Kiểm tra chẩn đoán VS Code trên các file JavaScript, HTML và CSS của module: không phát hiện lỗi.
+- Chưa chạy kiểm thử tương tác trình duyệt, reload/countdown, localStorage đa tab, đặt giá, responsive mobile hoặc hồi quy Cart/Review/Voucher/Order Tracking; các nội dung này chưa được đánh dấu đạt.
+
+### 5. Hạn chế và tích hợp tiếp theo
+- Đây là mô phỏng phía trình duyệt, không có đăng nhập thật, backend, khóa giao dịch đồng thời, đồng bộ thiết bị hoặc bảo đảm chống chỉnh sửa localStorage.
+- Nhóm có thể bổ sung liên kết "Đấu giá của tôi" vào điều hướng chung nếu muốn hiển thị trên mọi trang; hiện người dùng truy cập mục này từ trang Sàn đấu giá.
+- Giao diện hiện dùng ảnh demo từ Unsplash; có thể thay bằng tài sản nội bộ trước khi triển khai nếu cần hoạt động hoàn toàn offline.

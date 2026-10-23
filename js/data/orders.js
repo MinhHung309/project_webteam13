@@ -109,5 +109,114 @@ export const INITIAL_ORDERS = [
     ],
     createdAt: "2026-10-18T10:00:00Z",
     updatedAt: "2026-10-18T15:10:00Z"
+  },
+  {
+    id: "LHU-2026-001",
+    customerName: "Nguyễn An",
+    createdAt: "2026-10-21T08:30:00+07:00",
+    items: [
+      { productId: "lhu_prod_001", name: "Balo sinh viên LHU", price: 249000, quantity: 1, subtotal: 249000 },
+      { productId: "lhu_prod_002", name: "Chuột không dây", price: 189000, quantity: 1, subtotal: 189000 }
+    ],
+    subtotal: 438000,
+    discount: 30000,
+    shippingFee: 20000,
+    total: 428000,
+    shippingAddress: "Ký túc xá Cơ sở 2, TP. Biên Hòa (địa chỉ demo)",
+    shippingMethod: "Giao hàng tiêu chuẩn",
+    status: "shipping",
+    estimatedDelivery: "2026-10-25T18:00:00+07:00",
+    statusHistory: [
+      { status: "placed", timestamp: "2026-10-21T08:30:00+07:00" },
+      { status: "confirmed", timestamp: "2026-10-21T09:05:00+07:00" },
+      { status: "preparing", timestamp: "2026-10-21T13:20:00+07:00" },
+      { status: "shipping", timestamp: "2026-10-22T08:15:00+07:00" }
+    ]
+  },
+  {
+    id: "LHU-2026-002",
+    customerName: "Trần Bình",
+    createdAt: "2026-10-23T08:00:00+07:00",
+    items: [
+      { productId: "lhu_prod_004", name: "Sổ tay kế hoạch học tập", price: 75000, quantity: 2, subtotal: 150000 }
+    ],
+    subtotal: 150000,
+    discount: 0,
+    shippingFee: 15000,
+    total: 165000,
+    shippingAddress: "Cơ sở 1, TP. Biên Hòa (địa chỉ demo)",
+    shippingMethod: "Giao hàng tiêu chuẩn",
+    status: "confirmed",
+    estimatedDelivery: "2026-10-27T17:00:00+07:00",
+    statusHistory: [
+      { status: "placed", timestamp: "2026-10-23T08:00:00+07:00" },
+      { status: "confirmed", timestamp: "2026-10-23T08:20:00+07:00" }
+    ]
+  },
+  {
+    id: "LHU-2026-003",
+    customerName: "Lê Chi",
+    createdAt: "2026-10-17T10:15:00+07:00",
+    items: [
+      { productId: "lhu_prod_002", name: "Chuột không dây", price: 189000, quantity: 1, subtotal: 189000 },
+      { productId: "lhu_prod_004", name: "Sổ tay kế hoạch học tập", price: 75000, quantity: 1, subtotal: 75000 }
+    ],
+    subtotal: 264000,
+    discount: 20000,
+    shippingFee: 15000,
+    total: 259000,
+    shippingAddress: "Khu phố 4, TP. Biên Hòa (địa chỉ demo)",
+    shippingMethod: "Giao hàng nội thành",
+    status: "delivered",
+    estimatedDelivery: "2026-10-20T16:00:00+07:00",
+    statusHistory: [
+      { status: "placed", timestamp: "2026-10-17T10:15:00+07:00" },
+      { status: "confirmed", timestamp: "2026-10-17T10:30:00+07:00" },
+      { status: "preparing", timestamp: "2026-10-17T13:10:00+07:00" },
+      { status: "shipping", timestamp: "2026-10-18T08:45:00+07:00" },
+      { status: "delivered", timestamp: "2026-10-18T11:20:00+07:00" }
+    ]
+  },
+  {
+    id: "LHU-2026-004",
+    customerName: "Phạm Duy",
+    createdAt: "2026-10-22T15:40:00+07:00",
+    items: [
+      { productId: "lhu_prod_001", name: "Balo sinh viên LHU", price: 249000, quantity: 1, subtotal: 249000 }
+    ],
+    subtotal: 249000,
+    discount: 0,
+    shippingFee: 20000,
+    total: 269000,
+    shippingAddress: "Cơ sở 2, TP. Biên Hòa (địa chỉ demo)",
+    shippingMethod: "Giao hàng tiêu chuẩn",
+    status: "preparing",
+    estimatedDelivery: "2026-10-28T18:00:00+07:00",
+    statusHistory: [
+      { status: "placed", timestamp: "2026-10-22T15:40:00+07:00" },
+      { status: "confirmed", timestamp: "2026-10-22T16:00:00+07:00" },
+      { status: "preparing", timestamp: "2026-10-23T08:00:00+07:00" }
+    ]
+  },
+  {
+    id: "LHU-2026-005",
+    customerName: "Vũ Hà",
+    createdAt: "2026-10-20T11:00:00+07:00",
+    items: [
+      { productId: "lhu_prod_004", name: "Sổ tay kế hoạch học tập", price: 75000, quantity: 1, subtotal: 75000 }
+    ],
+    subtotal: 75000,
+    discount: 0,
+    shippingFee: 15000,
+    total: 90000,
+    shippingAddress: "Cơ sở 1, TP. Biên Hòa (địa chỉ demo)",
+    shippingMethod: "Giao hàng tiêu chuẩn",
+    status: "cancelled",
+    estimatedDelivery: "2026-10-26T17:00:00+07:00",
+    statusHistory: [
+      { status: "placed", timestamp: "2026-10-20T11:00:00+07:00" },
+      { status: "confirmed", timestamp: "2026-10-20T11:10:00+07:00" },
+      { status: "cancelled", timestamp: "2026-10-20T12:05:00+07:00" }
+    ]
   }
 ];

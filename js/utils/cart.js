@@ -37,7 +37,7 @@ export function findProductById(productId) {
 /**
  * Lấy dữ liệu giỏ hàng hiện tại từ LocalStorage
  * Luôn trả về một mảng hợp lệ, lọc bỏ các phần tử hỏng/không hợp lệ
- * @returns {Array<{productId: string, quantity: number, price?: number, name?: string, imageUrl?: string}>}
+ * @returns {Array<{productId: string, quantity: number}>}
  */
 export function getCart() {
   const rawCart = getStorageItem(STORAGE_KEYS.CART, []);
@@ -45,14 +45,14 @@ export function getCart() {
     return [];
   }
 
-  // Chuẩn hóa và làm sạch dữ liệu giỏ hàng
-  return rawCart
-    .filter(item => item && typeof item === "object" && item.productId)
-    .map(item => ({
-      ...item,
-      productId: String(item.productId),
-      quantity: Math.max(1, parseInt(item.quantity, 10) || 1)
-    }));
+  return rawCart.reduce((cart, item) => {
+    if (!item || typeof item !== "object" || Array.isArray(item) || !item.productId) return cart;
+    const quantity = Number(item.quantity);
+    const productId = String(item.productId);
+    if (!Number.isInteger(quantity) || quantity < 1 || !findProductById(productId)) return cart;
+    cart.push({ productId, quantity });
+    return cart;
+  }, []);
 }
 
 /**
@@ -76,8 +76,8 @@ function saveCart(cart) {
  * @returns {{success: boolean, message: string, cart: Array}}
  */
 export function addToCart(productId, quantity = 1) {
-  const validQty = parseInt(quantity, 10);
-  if (isNaN(validQty) || validQty <= 0) {
+  const validQty = Number(quantity);
+  if (!Number.isInteger(validQty) || validQty <= 0) {
     return {
       success: false,
       message: "Số lượng thêm vào giỏ hàng không hợp lệ.",
@@ -94,22 +94,40 @@ export function addToCart(productId, quantity = 1) {
     };
   }
 
+  if (!Number.isFinite(Number(product.price)) || Number(product.price) < 0) {
+    return {
+      success: false,
+      message: "Thông tin giá của sản phẩm không hợp lệ.",
+      cart: getCart()
+    };
+  }
+
+  if (product.inStock === false) {
+    return {
+      success: false,
+      message: "Sản phẩm hiện đã hết hàng.",
+      cart: getCart()
+    };
+  }
+
   const cart = getCart();
   const existingIndex = cart.findIndex(item => item.productId === String(productId));
+  const nextQuantity = (existingIndex > -1 ? cart[existingIndex].quantity : 0) + validQty;
+  const stockLimit = getProductStockLimit(product);
+  if (nextQuantity > stockLimit) {
+    return {
+      success: false,
+      message: `Số lượng sản phẩm trong kho chỉ còn ${stockLimit}.`,
+      cart
+    };
+  }
 
   if (existingIndex > -1) {
-    cart[existingIndex].quantity += validQty;
-    // Đồng bộ lại thông tin giá / tên nếu cần
-    cart[existingIndex].price = product.price;
-    cart[existingIndex].name = product.name;
-    cart[existingIndex].imageUrl = product.imageUrl;
+    cart[existingIndex].quantity = nextQuantity;
   } else {
     cart.push({
       productId: String(product.id),
-      quantity: validQty,
-      price: product.price,
-      name: product.name,
-      imageUrl: product.imageUrl
+      quantity: nextQuantity
     });
   }
 
@@ -129,8 +147,8 @@ export function addToCart(productId, quantity = 1) {
  * @returns {{success: boolean, message: string, cart: Array}}
  */
 export function updateCartQuantity(productId, quantity) {
-  const validQty = parseInt(quantity, 10);
-  if (isNaN(validQty)) {
+  const validQty = Number(quantity);
+  if (!Number.isInteger(validQty)) {
     return {
       success: false,
       message: "Số lượng cập nhật không hợp lệ.",
@@ -149,6 +167,23 @@ export function updateCartQuantity(productId, quantity) {
     return {
       success: false,
       message: "Sản phẩm không có trong giỏ hàng.",
+      cart
+    };
+  }
+
+  const product = findProductById(productId);
+  if (!product || product.inStock === false) {
+    return {
+      success: false,
+      message: "Sản phẩm hiện không còn hàng.",
+      cart
+    };
+  }
+  const stockLimit = getProductStockLimit(product);
+  if (validQty > stockLimit) {
+    return {
+      success: false,
+      message: `Số lượng sản phẩm trong kho chỉ còn ${stockLimit}.`,
       cart
     };
   }
@@ -215,20 +250,22 @@ export function getCartTotalQuantity() {
 }
 
 /**
- * Tính tổng tiền tạm tính của giỏ hàng (subtotal)
- * Lấy giá từ sản phẩm hoặc thông tin lưu trong item
+ * Tính tổng tiền tạm tính theo danh mục sản phẩm hiện hành
+ * Không sử dụng giá được lưu trong dữ liệu giỏ hàng
  * @returns {number}
  */
 export function getCartTotal() {
   const cart = getCart();
-  const products = getAllProducts();
-  const productPriceMap = new Map(products.map(p => [String(p.id), p.price]));
-
   return cart.reduce((sum, item) => {
-    // Ưu tiên giá mới nhất từ danh sách sản phẩm, nếu không thì lấy giá lưu trong cart
-    const price = productPriceMap.has(item.productId) 
-      ? productPriceMap.get(item.productId) 
-      : (typeof item.price === "number" ? item.price : 0);
-    return sum + price * (item.quantity || 1);
+    const product = findProductById(item.productId);
+    const price = Number(product?.price);
+    return Number.isFinite(price) && price >= 0 ? sum + price * item.quantity : sum;
   }, 0);
+}
+
+function getProductStockLimit(product) {
+  const stock = product.stock ?? product.stockQuantity ?? product.inventoryQuantity;
+  if (stock === undefined || stock === null || stock === "") return Infinity;
+  const limit = Number(stock);
+  return Number.isFinite(limit) && limit >= 0 ? Math.floor(limit) : Infinity;
 }

@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Tra cứu tiến trình giao hàng và lịch sử mua hàng demo tại LHU E-Shop.">
   <title>Theo dõi đơn hàng | LHU E-Commerce</title>
   <link rel="stylesheet" href="../css/style.css">
 </head>
@@ -13,19 +14,21 @@
         <span class="logo-icon">LHU</span>
         <span>E-Shop</span>
       </a>
-      <button type="button" class="menu-toggle" id="menuToggle" aria-label="Menu">☰</button>
-      <nav class="main-nav" id="mainNav">
+      <button type="button" class="menu-toggle" id="menuToggle" aria-label="Mở menu điều hướng" aria-expanded="false">☰</button>
+      <nav class="main-nav" id="mainNav" aria-label="Điều hướng chính">
         <ul class="nav-list">
           <li><a href="../index.html" class="nav-link">Trang chủ</a></li>
           <li><a href="./products.html" class="nav-link">Sản phẩm</a></li>
           <li><a href="./vouchers.html" class="nav-link">Voucher</a></li>
           <li><a href="./order-tracking.html" class="nav-link active">Theo dõi đơn</a></li>
+          <li><a href="./order-tracking.html#order-history" class="nav-link">Lịch sử mua hàng</a></li>
           <li><a href="./auction.html" class="nav-link">Đấu giá</a></li>
+          <li><a href="./reviews.html" class="nav-link">Đánh giá</a></li>
         </ul>
       </nav>
       <div class="header-actions">
-        <a href="./cart.html" class="action-link">
-          <span>🛒</span>
+        <a href="./cart.html" class="action-link" aria-label="Giỏ hàng của bạn">
+          <span aria-hidden="true">🛒</span>
           <span>Giỏ hàng</span>
           <span class="cart-counter" id="cartCount">0</span>
         </a>
@@ -34,19 +37,93 @@
   </header>
 
   <main class="main-content">
-    <div class="container placeholder-page">
-      <div class="placeholder-card">
-        <div class="placeholder-icon">🚚</div>
-        <h1>Tra Cứu Tiến Độ Đơn Hàng</h1>
-        <p>Phân hệ theo dõi vận chuyển và lịch sử đơn hàng bằng mã đơn sẽ kết hợp dữ liệu từ LocalStorage.</p>
-        <span class="badge badge-dev" style="margin-bottom: var(--spacing-lg);">Phân hệ 4: Đang phát triển</span>
+    <div class="container order-page">
+      <nav class="order-breadcrumb" aria-label="Breadcrumb">
+        <a href="../index.html">Trang chủ</a>
+        <span aria-hidden="true">/</span>
+        <span>Theo dõi đơn hàng</span>
+      </nav>
+
+      <section class="order-page-heading" aria-labelledby="order-page-title">
         <div>
-          <a href="../index.html" class="btn btn-primary">Quay lại Trang chủ</a>
+          <span class="order-eyebrow">LHU E-SHOP · ĐƠN HÀNG CỦA BẠN</span>
+          <h1 id="order-page-title">Theo dõi đơn hàng</h1>
+          <p>Nhập mã đơn để xem tình trạng xử lý và hành trình giao hàng.</p>
         </div>
-      </div>
+        <span class="badge badge-dev">Dữ liệu demo</span>
+      </section>
+
+      <section class="order-search-card" aria-labelledby="order-search-title">
+        <div class="order-search-icon" aria-hidden="true">⌕</div>
+        <div class="order-search-content">
+          <h2 id="order-search-title">Tra cứu hành trình đơn hàng</h2>
+          <p>Mã demo: LHU-2026-001 đến LHU-2026-005</p>
+          <form id="orderSearchForm" class="order-search-form" novalidate>
+            <label class="visually-hidden" for="orderIdInput">Mã đơn hàng (Order ID)</label>
+            <input
+              class="form-input"
+              id="orderIdInput"
+              name="orderId"
+              type="search"
+              placeholder="Ví dụ: LHU-2026-001"
+              autocomplete="off"
+              aria-describedby="orderSearchHint"
+            >
+            <button class="btn btn-primary" id="orderSearchButton" type="submit">Tra cứu</button>
+          </form>
+          <p class="order-search-hint" id="orderSearchHint">Thông tin đơn hàng trên trang này chỉ dùng minh họa, không yêu cầu đăng nhập.</p>
+        </div>
+      </section>
+
+      <div class="order-feedback" id="orderFeedback" role="status" aria-live="polite"></div>
+
+      <section class="order-result" id="orderResult" aria-live="polite" aria-label="Kết quả tra cứu" hidden></section>
+
+      <section class="order-empty-state" id="orderEmptyState">
+        <div class="order-empty-icon" aria-hidden="true">📦</div>
+        <h2>Đơn hàng của bạn sẽ hiển thị tại đây</h2>
+        <p>Tra cứu bằng một trong các mã demo phía trên hoặc chọn đơn hàng trong lịch sử mua hàng.</p>
+      </section>
+
+      <section class="order-history-section" id="order-history" aria-labelledby="order-history-title">
+        <div class="order-section-heading">
+          <div>
+            <span class="order-eyebrow">TÀI KHOẢN DEMO</span>
+            <h2 id="order-history-title">Lịch sử mua hàng</h2>
+            <p>Danh sách minh họa của người dùng giả lập; website chưa có đăng nhập thật.</p>
+          </div>
+        </div>
+
+        <div class="order-history-toolbar">
+          <div class="order-history-search">
+            <label class="visually-hidden" for="historySearchInput">Tìm kiếm theo mã đơn</label>
+            <input class="form-input" id="historySearchInput" type="search" placeholder="Tìm mã đơn hàng">
+          </div>
+          <div class="order-history-filter">
+            <label class="visually-hidden" for="historyStatusFilter">Lọc trạng thái đơn hàng</label>
+            <select class="form-select" id="historyStatusFilter">
+              <option value="all">Tất cả trạng thái</option>
+              <option value="processing">Đang xử lý</option>
+              <option value="shipping">Đang vận chuyển</option>
+              <option value="delivered">Đã giao</option>
+              <option value="cancelled">Đã hủy</option>
+            </select>
+          </div>
+        </div>
+        <div class="order-history-list" id="orderHistoryList" aria-live="polite"></div>
+      </section>
     </div>
   </main>
 
-  <script type="module" src="../js/main.js"></script>
+  <footer class="site-footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-bottom">
+        <p>&copy; 2026 LHU E-Commerce. Theo dõi đơn hàng demo.</p>
+        <p><a href="../index.html">Trang chủ</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <script type="module" src="../js/pages/order-tracking.js"></script>
 </body>
 </html>

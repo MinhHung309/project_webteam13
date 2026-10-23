@@ -88,11 +88,8 @@ interface Voucher {
 ### 2.4. Phân hệ 4: Giỏ hàng & Theo dõi đơn hàng (`js/data/orders.js`)
 ```typescript
 interface CartItem {
-  productId: string;       // "lhu_prod_001"
-  name: string;
-  price: number;
-  quantity: number;        // >= 1
-  imageUrl: string;
+  productId: string;       // "lhu_prod_001" — tham chiếu danh mục sản phẩm
+  quantity: number;        // số nguyên >= 1
 }
 
 interface OrderItem {
@@ -136,6 +133,12 @@ interface Order {
   updatedAt: string;
 }
 ```
+
+#### Order Tracking demo data
+
+`js/data/orders.js` retains the existing `lhu_orders` storage key and legacy order records, and includes five additional demo records (`LHU-2026-001` through `LHU-2026-005`) for the tracking/history page. The new demo shape uses `id`, `customerName`, `createdAt`, `items`, `subtotal`, `discount`, `shippingFee`, `total`, `shippingAddress`, `shippingMethod`, `status`, `estimatedDelivery`, and `statusHistory`. These are fictional records for coursework only.
+
+`js/pages/order-tracking.js` reads and validates stored records, adapts legacy `orderCode`/`pricing`/`timeline` fields for display, and adds only missing demo IDs without replacing existing orders. Checkout appends an order snapshot to `lhu_orders` using `id`/`orderCode`, `customer`, `items`, `voucherApplied`, `subtotal`, `discount`, `shippingFee`, `shippingDiscount`, `taxAmount`, `total`, `shippingAddress`, `paymentMethod`, `status`, and `statusHistory`. Order totals are read from the saved snapshot and are not recalculated from current products or vouchers. The checkout demo uses a 30,000 VND delivery fee and zero tax because the project has no tax configuration; shipping vouchers reduce the shipping component separately from product discounts. The active cart stores only `{ productId, quantity }`; prices and product display data are resolved from the product catalog.
 
 ### 2.5. Phân hệ 5: Sàn đấu giá sinh viên (`js/data/auctions.js`)
 ```typescript

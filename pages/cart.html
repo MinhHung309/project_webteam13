@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Giỏ hàng | LHU E-Commerce</title>
   <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/cart-checkout.css">
 </head>
 <body>
   <header class="site-header">
@@ -34,19 +35,40 @@
   </header>
 
   <main class="main-content">
-    <div class="container placeholder-page">
-      <div class="placeholder-card">
-        <div class="placeholder-icon">🛒</div>
-        <h1>Giỏ Hàng Của Bạn</h1>
-        <p>Phân hệ giỏ hàng và đặt hàng tương tác thông qua LocalStorage đang được nhóm hoàn thiện logic ở bước kế tiếp.</p>
-        <span class="badge badge-dev" style="margin-bottom: var(--spacing-lg);">Phân hệ Mua sắm & Giỏ hàng: Đang phát triển</span>
-        <div>
-          <a href="../index.html" class="btn btn-primary">Tiếp tục mua sắm</a>
-        </div>
+    <div class="container commerce-page">
+      <header class="commerce-heading">
+        <p class="commerce-eyebrow">LHU E-SHOP</p>
+        <h1>Giỏ hàng của bạn</h1>
+        <p>Kiểm tra sản phẩm và ưu đãi trước khi đặt hàng.</p>
+      </header>
+      <div id="cartFeedback" class="commerce-feedback" role="status" aria-live="polite" hidden></div>
+      <div class="cart-layout">
+        <section class="cart-items-panel" aria-labelledby="cartItemsHeading">
+          <div class="cart-panel-heading">
+            <h2 id="cartItemsHeading">Sản phẩm trong giỏ</h2>
+            <span id="cartItemCount" class="cart-item-count">0 sản phẩm</span>
+          </div>
+          <div id="cartItems" class="cart-items"></div>
+        </section>
+        <aside class="cart-summary-panel" aria-labelledby="cartSummaryHeading">
+          <h2 id="cartSummaryHeading">Tóm tắt đơn hàng</h2>
+          <form id="voucherForm" class="voucher-form" novalidate>
+            <label for="voucherCode">Mã giảm giá</label>
+            <div class="voucher-input-row">
+              <input id="voucherCode" name="voucherCode" type="text" autocomplete="off" placeholder="Nhập mã voucher">
+              <button class="btn btn-outline" type="submit">Áp dụng</button>
+            </div>
+            <p id="voucherFeedback" class="field-feedback" role="status" aria-live="polite"></p>
+            <button id="removeVoucher" class="text-button" type="button" hidden>Hủy voucher</button>
+          </form>
+          <dl id="cartTotals" class="cart-totals"></dl>
+          <a id="checkoutButton" class="btn btn-primary cart-checkout-button" href="./checkout.html">Tiến hành đặt hàng</a>
+          <a class="continue-shopping-link" href="./products.html">← Tiếp tục mua sắm</a>
+        </aside>
       </div>
     </div>
   </main>
 
-  <script type="module" src="../js/main.js"></script>
+  <script type="module" src="../js/pages/cart.js"></script>
 </body>
 </html>

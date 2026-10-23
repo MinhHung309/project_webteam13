@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Đặt hàng thành công | LHU E-Commerce</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/cart-checkout.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-container">
+      <a href="../index.html" class="brand-logo"><span class="logo-icon">LHU</span><span>E-Shop</span></a>
+      <nav class="main-nav" aria-label="Điều hướng chính">
+        <ul class="nav-list">
+          <li><a href="../index.html" class="nav-link">Trang chủ</a></li>
+          <li><a href="./products.html" class="nav-link">Sản phẩm</a></li>
+          <li><a href="./order-tracking.html" class="nav-link">Theo dõi đơn</a></li>
+        </ul>
+      </nav>
+      <div class="header-actions">
+        <a href="./cart.html" class="action-link" aria-label="Giỏ hàng của bạn">
+          <span aria-hidden="true">🛒</span><span>Giỏ hàng</span><span class="cart-counter" id="cartCount">0</span>
+        </a>
+      </div>
+    </div>
+  </header>
+  <main class="main-content">
+    <div class="container commerce-page">
+      <section class="order-success-card" aria-labelledby="successHeading">
+        <div class="order-success-icon" aria-hidden="true">✓</div>
+        <p class="commerce-eyebrow">LHU E-SHOP</p>
+        <h1 id="successHeading">Đặt hàng thành công!</h1>
+        <p id="successMessage">Đơn hàng demo đã được lưu và sẵn sàng theo dõi.</p>
+        <dl id="successDetails" class="success-details"></dl>
+        <div class="success-actions">
+          <a id="trackOrderLink" class="btn btn-primary" href="./order-tracking.html">Theo dõi đơn hàng</a>
+          <a class="btn btn-outline" href="./products.html">Tiếp tục mua sắm</a>
+        </div>
+      </section>
+    </div>
+  </main>
+  <script type="module" src="../js/pages/order-success.js"></script>
+</body>
+</html>
