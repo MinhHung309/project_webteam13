@@ -5,6 +5,7 @@
 
 import { initNavigation } from "../modules/nav.js";
 import { INITIAL_PRODUCTS } from "../data/products.js";
+import { addToCart } from "../utils/cart.js";
 import { 
   STORAGE_KEYS, 
   getStorageItem, 
@@ -101,21 +102,186 @@ function loadProductDetails(productId) {
 
       <p class="product-detail-desc">${product.description || "Sản phẩm chính hãng dành cho sinh viên Đại học Lạc Hồng."}</p>
 
-      <div style="display: flex; gap: var(--spacing-md); flex-wrap: wrap; margin-top: auto;">
-        <button 
-          type="button" 
-          class="btn btn-primary" 
-          onclick="alert('Sản phẩm đã được chọn. Phân hệ giỏ hàng đang được thành viên phụ trách hoàn thiện!')"
-        >
-          <span>🛒 Thêm vào giỏ hàng</span>
-        </button>
-        <a href="#reviewForm" class="btn btn-outline">
-          <span>✍️ Viết đánh giá</span>
-        </a>
+            <div class="product-detail-actions-wrap">
+        <div class="detail-qty-row">
+          <span class="detail-qty-label">Số lượng:</span>
+          <div class="product-qty-control detail-qty-control" role="group" aria-label="Điều chỉnh số lượng cho ${product.name}">
+            <button 
+              type="button" 
+              class="btn-qty btn-qty-minus" 
+              id="detailQtyMinus" 
+              aria-label="Giảm số lượng"
+              ${product.inStock === false ? "disabled" : ""}
+            >−</button>
+            <input 
+              type="number" 
+              class="product-qty-input detail-qty-input" 
+              id="detailQtyInput" 
+              value="1" 
+              min="1" 
+              max="99" 
+              aria-label="Số lượng sản phẩm"
+              ${product.inStock === false ? "disabled" : ""}
+            />
+            <button 
+              type="button" 
+              class="btn-qty btn-qty-plus" 
+              id="detailQtyPlus" 
+              aria-label="Tăng số lượng"
+              ${product.inStock === false ? "disabled" : ""}
+            >+</button>
+          </div>
+          <span class="detail-stock-status">
+            ${product.inStock === false ? '<span style="color: var(--danger); font-weight: 600;">Hết hàng</span>' : '<span style="color: var(--success); font-weight: 600;">✓ Còn hàng</span>'}
+          </span>
+        </div>
+
+        <div class="detail-buttons-group">
+          <button 
+            type="button" 
+            class="btn btn-primary" 
+            id="btnDetailAddToCart"
+            ${product.inStock === false ? "disabled" : ""}
+            aria-label="Thêm ${product.name} vào giỏ hàng"
+          >
+            <span>🛒 Thêm vào giỏ hàng</span>
+          </button>
+          <a href="#reviewForm" class="btn btn-outline" aria-label="Viết đánh giá cho ${product.name}">
+            <span>✍️ Viết đánh giá</span>
+          </a>
+        </div>
       </div>
     </div>
   `;
+
+  // Gắn sự kiện cho bộ điều khiển số lượng và nút Thêm vào giỏ hàng
+  setupDetailQuantityEvents(product.id);
 }
+
+/**
+ * Gắn các sự kiện điều khiển số lượng và thêm vào giỏ hàng cho trang chi tiết
+ * @param {string} productId 
+ */
+function setupDetailQuantityEvents(productId) {
+  const minusBtn = document.getElementById("detailQtyMinus");
+  const plusBtn = document.getElementById("detailQtyPlus");
+  const input = document.getElementById("detailQtyInput");
+  const addBtn = document.getElementById("btnDetailAddToCart");
+
+  if (minusBtn && input) {
+    minusBtn.addEventListener("click", () => {
+      const currentVal = parseInt(input.value, 10) || 1;
+      if (currentVal > 1) {
+        input.value = currentVal - 1;
+      }
+    });
+  }
+
+  if (plusBtn && input) {
+    plusBtn.addEventListener("click", () => {
+      const currentVal = parseInt(input.value, 10) || 1;
+      if (currentVal < 99) {
+        input.value = currentVal + 1;
+      }
+    });
+  }
+
+  if (input) {
+    input.addEventListener("change", () => {
+      let val = parseInt(input.value, 10);
+      if (isNaN(val) || val < 1) {
+        input.value = 1;
+      } else if (val > 99) {
+        input.value = 99;
+      } else {
+        input.value = val;
+      }
+    });
+
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "-" || e.key === "e" || e.key === "E" || e.key === "+") {
+        e.preventDefault();
+      }
+    });
+  }
+
+  if (addBtn) {
+    addBtn.addEventListener("click", () => {
+      const quantity = input ? Math.max(1, parseInt(input.value, 10) || 1) : 1;
+      handleDetailAddToCart(productId, quantity, addBtn, input);
+    });
+  }
+}
+
+/**
+ * Xử lý thêm sản phẩm vào giỏ hàng từ trang chi tiết
+ * @param {string} productId 
+ * @param {number} quantity 
+ * @param {HTMLButtonElement} buttonEl 
+ * @param {HTMLInputElement|null} inputEl 
+ */
+function handleDetailAddToCart(productId, quantity = 1, buttonEl, inputEl = null) {
+  const result = addToCart(productId, quantity);
+
+  if (result.success) {
+    const successMsg = quantity > 1 
+      ? `✓ Đã thêm ${quantity} sản phẩm vào giỏ hàng thành công!` 
+      : "✓ Đã thêm sản phẩm vào giỏ hàng thành công!";
+    showDetailToast("success", successMsg);
+
+    // Đặt lại ô số lượng về 1 sau khi thêm thành công
+    if (inputEl) {
+      inputEl.value = 1;
+    }
+
+    // Hiệu ứng phản hồi trên nút
+    const originalText = buttonEl.innerHTML;
+    buttonEl.innerHTML = "<span>✓ Đã thêm vào giỏ!</span>";
+    buttonEl.classList.remove("btn-primary");
+    buttonEl.classList.add("btn-secondary");
+    buttonEl.disabled = true;
+
+    setTimeout(() => {
+      buttonEl.innerHTML = originalText;
+      buttonEl.classList.remove("btn-secondary");
+      buttonEl.classList.add("btn-primary");
+      buttonEl.disabled = false;
+    }, 1200);
+  } else {
+    showDetailToast("error", result.message || "Không thể thêm sản phẩm vào giỏ hàng.");
+  }
+}
+
+/**
+ * Hiển thị thông báo Toast góc màn hình cho trang chi tiết
+ * @param {'success'|'error'|'info'} type 
+ * @param {string} message 
+ */
+function showDetailToast(type, message) {
+  let container = document.getElementById("detailToastContainer");
+  if (!container) {
+    container = document.createElement("div");
+    container.id = "detailToastContainer";
+    container.className = "voucher-toast-container";
+    container.setAttribute("aria-live", "polite");
+    document.body.appendChild(container);
+  }
+
+  const toast = document.createElement("div");
+  toast.className = `voucher-toast ${type}`;
+  toast.innerHTML = `<span>${message}</span>`;
+  container.appendChild(toast);
+
+  setTimeout(() => {
+    toast.style.opacity = "0";
+    toast.style.transform = "translateY(10px)";
+    toast.style.transition = "all 0.3s ease";
+    setTimeout(() => {
+      toast.remove();
+    }, 300);
+  }, 2500);
+}
+
 
 /**
  * Cập nhật toàn bộ giao diện Thống kê, Thanh tỷ lệ sao và Danh sách nhận xét
