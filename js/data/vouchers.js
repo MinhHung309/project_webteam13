@@ -92,7 +92,7 @@ export const INITIAL_VOUCHERS = [
   {
     id: "vouch_006",
     code: "EXPIRED2025",
-    title: "Ưu Đãi Tuần Lễ Chào K25 (Dữ liệu mẫu đã hết hạn)",
+    title: "Ưu Đãi Tuần Lễ Chào K25 (Đã hết hạn)",
     description: "Mã giảm giá mẫu dùng để kiểm thử trạng thái hết hạn và thông báo từ chối áp dụng.",
     discountType: "percent",
     discountValue: 15,
@@ -103,6 +103,6 @@ export const INITIAL_VOUCHERS = [
     usageLimit: 100,
     usedCount: 100,
     isActive: false,
-    categoryBadge: "Hết hạn (Demo)"
+    categoryBadge: "Đã hết hạn"
   }
 ];

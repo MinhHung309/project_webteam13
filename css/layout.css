@@ -199,6 +199,84 @@
   color: var(--white);
 }
 
+
+/* Enhanced Modern Footer Components */
+.footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: var(--spacing-sm);
+}
+
+.footer-brand .logo-icon {
+  background-color: var(--primary);
+  color: var(--white);
+  padding: 0.25rem 0.6rem;
+  border-radius: var(--border-radius-sm);
+  font-weight: var(--font-weight-extrabold);
+  font-size: var(--font-size-sm);
+  letter-spacing: 0.5px;
+}
+
+.footer-brand-name {
+  color: var(--white);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: -0.01em;
+}
+
+.footer-desc {
+  font-size: var(--font-size-sm);
+  line-height: 1.65;
+  color: #94a3b8;
+  margin-top: var(--spacing-xs);
+}
+
+.footer-dev-title {
+  font-size: var(--font-size-xs);
+  color: #64748b;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: var(--font-weight-semibold);
+}
+
+.footer-dev-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.dev-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.65rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--border-radius-md);
+  color: #cbd5e1 !important;
+  font-size: var(--font-size-sm);
+  transition: all var(--transition-fast);
+  width: fit-content;
+}
+
+.dev-link:hover {
+  background: rgba(13, 93, 184, 0.25);
+  border-color: rgba(13, 93, 184, 0.5);
+  color: var(--white) !important;
+  transform: translateX(3px);
+}
+
+.github-icon {
+  flex-shrink: 0;
+  transition: transform var(--transition-fast);
+}
+
+.dev-link:hover .github-icon {
+  transform: scale(1.15);
+}
+
 /* ==========================================================================
    Responsive Header & Footer Breakpoints
    ========================================================================== */

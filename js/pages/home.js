@@ -13,11 +13,11 @@ export function renderCategories(container) {
   if (!container) return;
 
   const html = INITIAL_CATEGORIES.map(cat => `
-    <article class="category-card" tabindex="0" role="button" aria-label="Danh mục ${cat.name}">
+    <a href="./pages/products.html?category=${encodeURIComponent(cat.id)}" class="category-card" aria-label="Danh mục ${cat.name}">
       <span class="category-icon" aria-hidden="true">${cat.icon}</span>
       <h3 class="category-name">${cat.name}</h3>
       <span class="category-count">${cat.itemCount} sản phẩm</span>
-    </article>
+    </a>
   `).join("");
 
   container.innerHTML = html;
