@@ -137,6 +137,12 @@ interface Order {
 }
 ```
 
+#### Order Tracking demo data
+
+`js/data/orders.js` retains the existing `lhu_orders` storage key and legacy order records, and includes five additional demo records (`LHU-2026-001` through `LHU-2026-005`) for the tracking/history page. The new demo shape uses `id`, `customerName`, `createdAt`, `items`, `subtotal`, `discount`, `shippingFee`, `total`, `shippingAddress`, `shippingMethod`, `status`, `estimatedDelivery`, and `statusHistory`. These are fictional records for coursework only.
+
+`js/pages/order-tracking.js` reads and validates stored records, adapts legacy `orderCode`/`pricing`/`timeline` fields for display, and adds only missing demo IDs without replacing existing orders. Order totals are read from the saved order snapshot and are not recalculated from current products or vouchers. Checkout is not implemented yet; its future integration should append a completed order to `lhu_orders` using the same snapshot fields.
+
 ### 2.5. Phân hệ 5: Sàn đấu giá sinh viên (`js/data/auctions.js`)
 ```typescript
 interface Bid {

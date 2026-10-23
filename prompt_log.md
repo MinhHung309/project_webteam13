@@ -125,6 +125,28 @@
 - `js/utils/storage.js`: Mở rộng toàn bộ `STORAGE_KEYS` cho 5 phân hệ, bổ sung hàm `initializeStorageItem` và xử lý an toàn lỗi `QuotaExceededError`.
 - `docs/data_architecture.md`: Bản đặc tả chi tiết toàn bộ Schema, sơ đồ Mermaid giao tiếp giữa các module, danh sách hàm giao tiếp và 6 test cases chuẩn.
 
+---
 
+## Prompt 03 — Phân hệ Theo dõi đơn hàng
+**Ngày thực hiện**: 23/10/2026
+**Mục tiêu**: Hoàn thiện tra cứu đơn hàng và lịch sử mua hàng demo, dùng lại khóa lưu `lhu_orders` và giữ nguyên dữ liệu các phân hệ khác.
 
+### 1. File tạo mới và chỉnh sửa
+- Tạo `js/pages/order-tracking.js`: kiểm tra/chuẩn hóa dữ liệu đơn hàng hiện có và legacy, tra cứu mã không tải lại trang, hiển thị timeline trạng thái, đếm ngược giao hàng và lọc lịch sử.
+- Chỉnh `pages/order-tracking.html`: thay placeholder bằng khu vực tra cứu, kết quả chi tiết và lịch sử mua hàng có nhãn dữ liệu demo.
+- Chỉnh `js/data/orders.js`: thêm năm đơn demo `LHU-2026-001` đến `LHU-2026-005` với dữ liệu và lịch sử trạng thái nhất quán; giữ lại các đơn legacy.
+- Chỉnh `css/components.css`: bổ sung style riêng responsive cho trang, timeline trạng thái và lịch sử.
+- Chỉnh `docs/data_architecture.md`: ghi lại cách tương thích schema legacy, snapshot giá và điểm tích hợp checkout tương lai.
+
+### 2. Luồng hoạt động
+- Lần đầu truy cập, dữ liệu mẫu được lưu ở `lhu_orders`; các lần sau chỉ bổ sung mã demo còn thiếu, không ghi đè đơn đang có.
+- Trang chuẩn hóa cả schema mới và schema legacy; đơn lỗi được bỏ qua có cảnh báo và không dùng giá sản phẩm/voucher hiện tại để tính lại tổng tiền.
+- Tra cứu bằng nút hoặc Enter, bỏ khoảng trắng thừa, hiển thị trạng thái lỗi rõ ràng khi trống/không tìm thấy; lịch sử hỗ trợ tìm mã, lọc trạng thái và mở đơn đã chọn.
+- Countdown cập nhật mỗi giây, được dọn trước lần tra cứu mới và khi rời trang; đơn giao thành công hiển thị thông báo hoàn tất, đơn hủy ẩn countdown và không hiển thị tiếp các mốc giao hàng.
+- Checkout chưa có trong repository; cần tích hợp sau bằng cách lưu snapshot đơn hoàn tất vào `lhu_orders`. Không chỉnh giỏ hàng hoặc công thức voucher.
+
+### 3. Dữ liệu demo và kiểm thử
+- Trạng thái mẫu: `LHU-2026-001` đang vận chuyển; `LHU-2026-002` đã xác nhận; `LHU-2026-003` đã giao; `LHU-2026-004` đang chuẩn bị; `LHU-2026-005` đã hủy.
+- `git diff --check`: đạt, không phát hiện lỗi khoảng trắng trong diff.
+- Chưa chạy test tương tác trình duyệt, responsive hoặc đối chiếu Cart/Review/Voucher; không đánh dấu các test này đạt khi chưa thực thi.
 
