@@ -1541,14 +1541,17 @@
 }
 
 /* Lưới Thẻ Voucher (Voucher Cards Grid) */
+﻿/* ==========================================================================
+   Voucher Cards & Ticket System (Refined & Bulletproof Layout)
+   ========================================================================== */
 .vouchers-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
   gap: var(--spacing-lg);
   margin-bottom: var(--spacing-2xl);
+  align-items: stretch;
 }
 
-/* THIẾT KẾ VOUCHER TICKET VỚI VIỀN RĂNG CƯA / TORN-EDGE / TICKET NOTCH */
 .voucher-ticket-card {
   position: relative;
   background: var(--white);
@@ -1556,22 +1559,22 @@
   border-radius: var(--border-radius-lg);
   display: flex;
   overflow: hidden;
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-xs);
   transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
+  min-height: 200px;
 }
 
 .voucher-ticket-card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-3px);
   box-shadow: 0 10px 24px -4px rgba(13, 93, 184, 0.12);
   border-color: rgba(13, 93, 184, 0.3);
 }
 
-/* Cột trái: Badge & Giá trị ưu đãi */
 .voucher-left-stub {
   width: 105px;
   background: linear-gradient(180deg, var(--primary) 0%, var(--deep-navy) 100%);
   color: var(--white);
-  padding: var(--spacing-md) var(--spacing-sm);
+  padding: 1rem 0.6rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1579,29 +1582,31 @@
   text-align: center;
   position: relative;
   flex-shrink: 0;
+  box-sizing: border-box;
 }
 
-/* Đổi màu theo loại voucher */
 .voucher-ticket-card.type-shipping .voucher-left-stub {
   background: linear-gradient(180deg, #10b981 0%, #047857 100%);
 }
 .voucher-ticket-card.type-fixed .voucher-left-stub {
-  background: linear-gradient(180deg, #ff6b35 0%, #c2410c 100%);
+  background: linear-gradient(180deg, #f97316 0%, #c2410c 100%);
 }
 .voucher-ticket-card.is-expired .voucher-left-stub {
-  background: linear-gradient(180deg, var(--gray-400) 0%, var(--gray-600) 100%);
+  background: linear-gradient(180deg, #94a3b8 0%, #64748b 100%);
 }
 
 .stub-icon {
-  font-size: 1.75rem;
-  margin-bottom: 0.25rem;
+  font-size: 1.6rem;
+  line-height: 1;
+  margin-bottom: 0.35rem;
 }
 
 .stub-value {
   font-size: 1.15rem;
   font-weight: 800;
-  line-height: 1.1;
+  line-height: 1.15;
   letter-spacing: -0.02em;
+  word-break: break-word;
 }
 
 .stub-type-label {
@@ -1609,14 +1614,15 @@
   opacity: 0.9;
   text-transform: uppercase;
   font-weight: 600;
-  margin-top: 2px;
+  margin-top: 4px;
+  line-height: 1.2;
 }
 
-/* Đường cắt răng cưa / vết lõm vé (Ticket Notch) */
 .voucher-divider-line {
   position: relative;
   width: 0;
   border-left: 2px dashed rgba(0, 0, 0, 0.12);
+  flex-shrink: 0;
 }
 
 .voucher-divider-line::before,
@@ -1625,7 +1631,7 @@
   position: absolute;
   width: 16px;
   height: 16px;
-  background: var(--light); /* Trùng màu nền trang web để tạo lỗ khuyết */
+  background: var(--light, #f8fafc);
   border-radius: 50%;
   left: -9px;
   z-index: 3;
@@ -1640,29 +1646,39 @@
   bottom: -9px;
 }
 
-/* Cột phải: Thông tin chi tiết voucher */
 .voucher-right-body {
   flex: 1;
-  padding: var(--spacing-md) var(--spacing-lg);
+  min-width: 0;
+  padding: 1rem 1.15rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   background: var(--white);
+  box-sizing: border-box;
+}
+
+.voucher-main-info {
+  display: flex;
+  flex-direction: column;
 }
 
 .voucher-card-top {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: var(--spacing-xs);
+  gap: 0.5rem;
   margin-bottom: 0.35rem;
 }
 
 .voucher-title {
-  font-size: var(--font-size-base);
+  font-size: var(--font-size-sm);
   font-weight: 700;
   color: var(--dark);
-  line-height: 1.3;
+  line-height: 1.35;
+  margin: 0;
+  flex: 1;
+  min-width: 0;
+  word-break: break-word;
 }
 
 .voucher-badge-status {
@@ -1672,65 +1688,78 @@
   border-radius: var(--border-radius-full);
   text-transform: uppercase;
   white-space: nowrap;
+  flex-shrink: 0;
+  letter-spacing: 0.3px;
 }
 
 .badge-status-valid {
   background: #dcfce7;
   color: #166534;
+  border: 1px solid #bbf7d0;
 }
 
 .badge-status-saved {
   background: #e0e7ff;
   color: #3730a3;
+  border: 1px solid #c7d2fe;
 }
 
 .badge-status-expired {
-  background: #fee2e2;
-  color: #991b1b;
+  background: #f1f5f9;
+  color: #64748b;
+  border: 1px solid #e2e8f0;
 }
 
 .voucher-desc {
   font-size: var(--font-size-xs);
   color: var(--gray-600);
   line-height: 1.45;
-  margin-bottom: var(--spacing-sm);
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  margin: 0 0 0.5rem 0;
+  word-break: break-word;
 }
 
 .voucher-condition-box {
-  background: var(--light);
+  background: var(--light, #f8fafc);
+  border: 1px solid var(--gray-100);
   border-radius: var(--border-radius-sm);
-  padding: 0.35rem 0.6rem;
-  font-size: 0.7rem;
+  padding: 0.4rem 0.65rem;
+  font-size: 0.72rem;
   color: var(--text-main);
-  margin-bottom: var(--spacing-md);
+  margin-bottom: 0.75rem;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 3px;
 }
 
 .voucher-condition-item {
   display: flex;
   align-items: center;
-  gap: 0.35rem;
+  gap: 0.4rem;
+  line-height: 1.3;
+}
+
+.cond-icon {
+  flex-shrink: 0;
+  font-size: 0.8rem;
+}
+
+.cond-text {
+  word-break: break-word;
 }
 
 .voucher-condition-item strong {
   color: var(--dark);
 }
 
-/* Khung mã Code & Nhóm nút hành động */
 .voucher-action-footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--spacing-xs);
+  gap: 0.5rem;
   margin-top: auto;
-  padding-top: var(--spacing-xs);
+  padding-top: 0.65rem;
   border-top: 1px solid var(--gray-100);
+  flex-wrap: wrap;
 }
 
 .voucher-code-chip {
@@ -1747,21 +1776,34 @@
   border: 1px dashed rgba(13, 93, 184, 0.4);
   cursor: pointer;
   transition: all var(--transition-fast);
+  white-space: nowrap;
 }
 
-.voucher-code-chip:hover {
+.voucher-code-chip:hover:not(.is-disabled) {
   background: rgba(13, 93, 184, 0.15);
   border-color: var(--primary);
+}
+
+.voucher-code-chip.is-disabled {
+  background: #f1f5f9;
+  color: #94a3b8;
+  border-color: #cbd5e1;
+  cursor: default;
+}
+
+.chip-copy-icon {
+  font-size: 0.75rem;
 }
 
 .voucher-buttons-group {
   display: flex;
   align-items: center;
-  gap: 0.35rem;
+  gap: 0.4rem;
+  flex-wrap: wrap;
 }
 
 .btn-voucher-action {
-  font-size: var(--font-size-xs);
+  font-size: 0.75rem;
   font-weight: 600;
   padding: 0.35rem 0.75rem;
   border-radius: var(--border-radius-md);
@@ -1770,12 +1812,15 @@
   border: 1px solid transparent;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 0.25rem;
+  white-space: nowrap;
+  line-height: 1.2;
 }
 
 .btn-copy-code {
-  background: var(--light);
-  color: var(--text-main);
+  background: var(--light, #f8fafc);
+  color: var(--dark);
   border-color: var(--gray-200);
 }
 
@@ -1791,7 +1836,7 @@
 }
 
 .btn-save-wallet:hover {
-  background: var(--primary-hover);
+  background: var(--primary-hover, #0b4a94);
 }
 
 .btn-save-wallet.is-saved {
@@ -1811,89 +1856,106 @@
   background: #fecaca;
 }
 
-/* Giao diện khi voucher hết hạn */
+.btn-disabled {
+  background: #f1f5f9;
+  color: #94a3b8;
+  border-color: #e2e8f0;
+  cursor: not-allowed;
+  opacity: 0.85;
+}
+
 .voucher-ticket-card.is-expired {
-  opacity: 0.75;
-  filter: grayscale(0.5);
+  background: #fafafa;
+  border-color: #e2e8f0;
+  box-shadow: none;
 }
 
-/* KHU VỰC MÔ PHỎNG GIỎ HÀNG & TÍNH TOÁN VOUCHER (Cart Voucher Simulator) */
-.voucher-simulator-section {
-  background: var(--white);
-  border: 1px solid var(--gray-200);
-  border-radius: var(--border-radius-xl);
-  padding: var(--spacing-xl);
-  margin-bottom: var(--spacing-2xl);
-  box-shadow: var(--shadow-sm);
+.voucher-ticket-card.is-expired:hover {
+  transform: none;
+  border-color: #cbd5e1;
 }
 
-.simulator-header {
-  border-bottom: 2px solid var(--gray-100);
-  padding-bottom: var(--spacing-md);
-  margin-bottom: var(--spacing-lg);
+.voucher-ticket-card.is-expired .voucher-right-body {
+  background: #fafafa;
 }
 
-.simulator-header h2 {
-  font-size: var(--font-size-xl);
-  color: var(--deep-navy);
-  font-weight: 800;
-  margin-bottom: 4px;
+.voucher-ticket-card.is-expired .voucher-title {
+  color: #64748b;
 }
 
-.simulator-grid {
-  display: grid;
-  grid-template-columns: 1.15fr 0.85fr;
-  gap: var(--spacing-xl);
+.voucher-ticket-card.is-expired .voucher-desc {
+  color: #94a3b8;
 }
 
-.simulator-card-box {
-  background: var(--light);
-  border: 1px solid var(--gray-200);
-  border-radius: var(--border-radius-lg);
-  padding: var(--spacing-lg);
+.voucher-ticket-card.is-expired .voucher-condition-box {
+  background: #f1f5f9;
+  border-color: #e2e8f0;
+  color: #64748b;
 }
 
-.simulator-input-row {
-  display: flex;
-  gap: var(--spacing-sm);
-  margin-bottom: var(--spacing-md);
+@media (max-width: 768px) {
+  .vouchers-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
-.simulator-result-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: var(--font-size-sm);
-}
+@media (max-width: 480px) {
+  .voucher-ticket-card {
+    flex-direction: column;
+    min-height: auto;
+  }
 
-.simulator-result-table tr {
-  border-bottom: 1px solid var(--gray-200);
-}
+  .voucher-left-stub {
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 0.65rem 1rem;
+  }
 
-.simulator-result-table tr:last-child {
-  border-bottom: none;
-}
+  .stub-icon {
+    font-size: 1.25rem;
+    margin-bottom: 0;
+  }
 
-.simulator-result-table td {
-  padding: 0.65rem 0;
-  color: var(--text-main);
-}
+  .stub-value {
+    font-size: 1rem;
+  }
 
-.simulator-result-table td:last-child {
-  text-align: right;
-  font-weight: 600;
-  color: var(--dark);
-}
+  .voucher-divider-line {
+    width: 100%;
+    height: 0;
+    border-left: none;
+    border-top: 2px dashed rgba(0, 0, 0, 0.12);
+  }
 
-.simulator-discount-row td {
-  color: #16a34a !important;
-  font-weight: 700;
-}
+  .voucher-divider-line::before {
+    left: -9px;
+    top: -9px;
+  }
 
-.simulator-total-row td {
-  font-size: var(--font-size-lg);
-  font-weight: 800 !important;
-  color: var(--primary) !important;
-  padding-top: var(--spacing-md);
+  .voucher-divider-line::after {
+    left: auto;
+    right: -9px;
+    top: -9px;
+    bottom: auto;
+  }
+
+  .voucher-action-footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .voucher-code-chip {
+    justify-content: center;
+  }
+
+  .voucher-buttons-group {
+    width: 100%;
+  }
+
+  .voucher-buttons-group .btn-voucher-action {
+    flex: 1;
+  }
 }
 
 /* Toast alert thông báo lưu / sao chép thành công */
@@ -1969,10 +2031,7 @@
     display: none;
   }
 
-  .simulator-grid {
-    grid-template-columns: 1fr;
-    gap: var(--spacing-lg);
-  }
+
 }
 
 @media (max-width: 480px) {

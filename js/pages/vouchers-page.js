@@ -11,13 +11,12 @@ import {
   getSavedVoucherCodes, 
   saveVoucherToWallet, 
   removeVoucherFromWallet,
-  calculateVoucherDiscount,
   isVoucherValidDate,
   formatExpiryDate 
 } from "../modules/vouchers.js";
 
 // Trạng thái cục bộ của trang
-let activeTab = "all";       // 'all': Kho voucher chung | 'wallet': Ví của tôi
+let activeTab = "all";          // 'all': Kho voucher chung | 'wallet': Ví của tôi
 let activeStatusFilter = "all"; // 'all' | 'valid' | 'saved' | 'expired'
 let searchQuery = "";
 
@@ -36,7 +35,6 @@ document.addEventListener("DOMContentLoaded", () => {
   setupTabEvents();
   setupFilterEvents();
   setupSearchEvents();
-  setupSimulatorEvents();
 });
 
 /**
@@ -49,90 +47,111 @@ function updateVoucherStats() {
   const validVouchers = allVouchers.filter(v => isVoucherValidDate(v));
   const savedVouchers = allVouchers.filter(v => savedCodes.includes(v.code.toUpperCase()));
 
-  const statValidEl = document.getElementById("statValidCount");
-  const statSavedEl = document.getElementById("statSavedCount");
-  const badgeAllEl = document.getElementById("badgeAllCount");
-  const badgeWalletEl = document.getElementById("badgeWalletCount");
+  const totalValidEl = document.getElementById("statValidCount");
+  const totalSavedEl = document.getElementById("statSavedCount");
+  const tabWalletCountEl = document.getElementById("badgeWalletCount");
+  const tabAllCountEl = document.getElementById("badgeAllCount");
 
-  if (statValidEl) statValidEl.textContent = validVouchers.length;
-  if (statSavedEl) statSavedEl.textContent = savedVouchers.length;
-  if (badgeAllEl) badgeAllEl.textContent = allVouchers.length;
-  if (badgeWalletEl) badgeWalletEl.textContent = savedVouchers.length;
+  if (totalValidEl) totalValidEl.textContent = validVouchers.length;
+  if (totalSavedEl) totalSavedEl.textContent = savedVouchers.length;
+  if (tabWalletCountEl) tabWalletCountEl.textContent = savedVouchers.length;
+  if (tabAllCountEl) tabAllCountEl.textContent = allVouchers.length;
 }
 
 /**
- * Render danh sách voucher ra giao diện dựa theo tab, bộ lọc và từ khóa tìm kiếm
+ * Lọc danh sách voucher theo tab, filter pill và search keyword
+ * @returns {Array<object>}
+ */
+function getFilteredVouchers() {
+  const allVouchers = getAllVouchers();
+  const savedCodes = getSavedVoucherCodes();
+
+  return allVouchers.filter(voucher => {
+    const isSaved = savedCodes.includes(voucher.code.toUpperCase());
+    const isValid = isVoucherValidDate(voucher);
+
+    // 1. Lọc theo Tab chính
+    if (activeTab === "wallet" && !isSaved) {
+      return false;
+    }
+
+    // 2. Lọc theo Pills trạng thái (chỉ áp dụng khi ở Tab "all")
+    if (activeTab === "all") {
+      if (activeStatusFilter === "valid" && !isValid) return false;
+      if (activeStatusFilter === "saved" && !isSaved) return false;
+      if (activeStatusFilter === "expired" && isValid) return false;
+    }
+
+    // 3. Lọc theo từ khóa tìm kiếm (mã voucher hoặc tiêu đề/mô tả)
+    if (searchQuery.trim() !== "") {
+      const q = searchQuery.trim().toLowerCase();
+      const codeMatch = voucher.code.toLowerCase().includes(q);
+      const titleMatch = voucher.title.toLowerCase().includes(q);
+      const descMatch = voucher.description.toLowerCase().includes(q);
+      if (!codeMatch && !titleMatch && !descMatch) {
+        return false;
+      }
+    }
+
+    return true;
+  });
+}
+
+/**
+ * Render danh sách voucher ra grid HTML dạng thẻ Ticket
  */
 function renderVouchers() {
   const gridContainer = document.getElementById("vouchersGrid");
   if (!gridContainer) return;
 
-  const allVouchers = getAllVouchers();
+  const vouchers = getFilteredVouchers();
   const savedCodes = getSavedVoucherCodes();
 
-  // 1. Lọc theo tab hiện hành
-  let filtered = allVouchers;
-  if (activeTab === "wallet") {
-    filtered = filtered.filter(v => savedCodes.includes(v.code.toUpperCase()));
-  }
-
-  // 2. Lọc theo bộ lọc trạng thái (status filter)
-  if (activeStatusFilter === "valid") {
-    filtered = filtered.filter(v => isVoucherValidDate(v));
-  } else if (activeStatusFilter === "saved") {
-    filtered = filtered.filter(v => savedCodes.includes(v.code.toUpperCase()));
-  } else if (activeStatusFilter === "expired") {
-    filtered = filtered.filter(v => !isVoucherValidDate(v));
-  }
-
-  // 3. Lọc theo từ khóa tìm kiếm (searchQuery)
-  if (searchQuery.trim() !== "") {
-    const q = searchQuery.toLowerCase().trim();
-    filtered = filtered.filter(v => 
-      (v.code && v.code.toLowerCase().includes(q)) ||
-      (v.title && v.title.toLowerCase().includes(q)) ||
-      (v.description && v.description.toLowerCase().includes(q))
-    );
-  }
-
-  // 4. Nếu danh sách rỗng, hiển thị empty state thân thiện
-  if (filtered.length === 0) {
+  if (vouchers.length === 0) {
     gridContainer.innerHTML = `
-      <div class="voucher-empty-state">
-        <div class="voucher-empty-icon">${activeTab === 'wallet' ? '💼' : '🎟️'}</div>
-        <h3 style="color: var(--dark); margin-bottom: 4px; font-size: var(--font-size-lg);">
-          ${activeTab === 'wallet' ? 'Ví Voucher của bạn đang trống' : 'Không tìm thấy mã giảm giá phù hợp'}
-        </h3>
-        <p style="color: var(--gray-600); font-size: var(--font-size-sm); max-width: 450px; margin: 0 auto 1rem;">
-          ${activeTab === 'wallet' 
-            ? 'Hãy chuyển sang tab "Kho Voucher Chung" và bấm "Lưu vào ví" các mã bạn yêu thích nhé!' 
-            : 'Hãy thử tìm kiếm với từ khóa khác hoặc chuyển sang chế độ lọc tất cả.'}
-        </p>
-        ${activeTab === 'wallet' ? `
-          <button type="button" class="btn btn-primary btn-sm" id="btnGoToAllTab">
-            Xem Kho Voucher Chung
-          </button>
-        ` : ''}
+      <div class="vouchers-empty-state">
+        <span class="empty-icon">🎟️</span>
+        <h3>Không tìm thấy voucher phù hợp</h3>
+        <p>${
+          activeTab === "wallet" 
+            ? "Ví của bạn chưa có mã nào. Hãy khám phá và bấm 'Lưu voucher' từ Kho Voucher Chung nhé!" 
+            : "Không có mã ưu đãi nào khớp với bộ lọc hoặc từ khóa tìm kiếm của bạn."
+        }</p>
+        ${
+          activeTab === "wallet" 
+            ? `<button type="button" class="btn btn-primary btn-sm" id="btnEmptyGoExplore">Khám Phá Voucher Ngay</button>`
+            : `<button type="button" class="btn btn-outline btn-sm" id="btnEmptyResetFilter">Xóa Bộ Lọc</button>`
+        }
       </div>
     `;
 
-    const btnGo = document.getElementById("btnGoToAllTab");
-    if (btnGo) {
-      btnGo.addEventListener("click", () => {
-        switchTab("all");
+    const btnGoExplore = document.getElementById("btnEmptyGoExplore");
+    if (btnGoExplore) {
+      btnGoExplore.addEventListener("click", () => switchTab("all"));
+    }
+
+    const btnReset = document.getElementById("btnEmptyResetFilter");
+    if (btnReset) {
+      btnReset.addEventListener("click", () => {
+        activeStatusFilter = "all";
+        searchQuery = "";
+        const searchInput = document.getElementById("voucherSearchInput");
+        if (searchInput) searchInput.value = "";
+        document.querySelectorAll(".filter-pill").forEach(p => p.classList.toggle("active", p.dataset.filter === "all"));
+        renderVouchers();
       });
     }
+
     return;
   }
 
-  // 5. Render danh sách thẻ voucher (Torn-edge Ticket Card)
-  const html = filtered.map(voucher => {
+  const html = vouchers.map(voucher => {
     const isSaved = savedCodes.includes(voucher.code.toUpperCase());
     const isValid = isVoucherValidDate(voucher);
 
-    // Xác định class loại voucher
+    // Cấu hình loại voucher và icon
     let typeClass = "";
-    let stubIcon = "🏷️";
+    let stubIcon = "";
     let stubValue = "";
     let stubLabel = "";
 
@@ -176,9 +195,20 @@ function renderVouchers() {
       conditionText += ` • Tối đa ${formatCurrency(voucher.maxDiscountAmount)}`;
     }
 
-    // Nút lưu / xóa ví
+    // Nút lưu / xóa ví / hết hạn
     let walletButtonHtml = "";
-    if (activeTab === "wallet") {
+    if (!isValid) {
+      walletButtonHtml = `
+        <button 
+          type="button" 
+          class="btn-voucher-action btn-disabled" 
+          disabled 
+          title="Voucher này đã hết thời gian hiệu lực"
+        >
+          <span>Đã hết hạn</span>
+        </button>
+      `;
+    } else if (activeTab === "wallet") {
       walletButtonHtml = `
         <button 
           type="button" 
@@ -209,7 +239,6 @@ function renderVouchers() {
             class="btn-voucher-action btn-save-wallet" 
             data-action="save-wallet" 
             data-code="${voucher.code}"
-            ${!isValid ? 'disabled style="opacity:0.5; cursor:not-allowed;"' : ''}
             title="Lưu voucher vào ví cá nhân"
           >
             <span>💾 Lưu voucher</span>
@@ -232,7 +261,7 @@ function renderVouchers() {
 
         <!-- Cột phải: Thân vé -->
         <div class="voucher-right-body">
-          <div>
+          <div class="voucher-main-info">
             <div class="voucher-card-top">
               <h3 class="voucher-title">${escapeHtml(voucher.title)}</h3>
               ${statusBadgeHtml}
@@ -242,12 +271,12 @@ function renderVouchers() {
 
             <div class="voucher-condition-box">
               <div class="voucher-condition-item">
-                <span>📋</span>
-                <span>${conditionText}</span>
+                <span class="cond-icon">📋</span>
+                <span class="cond-text">${conditionText}</span>
               </div>
               <div class="voucher-condition-item">
-                <span>⏰</span>
-                <span>HSD: <strong>${formatExpiryDate(voucher.validUntil)}</strong></span>
+                <span class="cond-icon">⏰</span>
+                <span class="cond-text">HSD: <strong>${formatExpiryDate(voucher.validUntil)}</strong></span>
               </div>
             </div>
           </div>
@@ -255,15 +284,15 @@ function renderVouchers() {
           <!-- Chân thẻ: Mã và Nút hành động -->
           <div class="voucher-action-footer">
             <span 
-              class="voucher-code-chip" 
+              class="voucher-code-chip ${!isValid ? 'is-disabled' : ''}" 
               data-action="copy-code" 
               data-code="${voucher.code}" 
-              title="Bấm để sao chép mã"
+              title="${isValid ? 'Bấm để sao chép mã' : 'Mã voucher đã hết hạn'}"
               role="button"
               tabindex="0"
             >
               <span>${voucher.code}</span>
-              <span style="font-size: 0.75rem;">📋</span>
+              <span class="chip-copy-icon">📋</span>
             </span>
 
             <div class="voucher-buttons-group">
@@ -299,52 +328,45 @@ function attachVoucherCardActions(container) {
   container.querySelectorAll('[data-action="copy-code"]').forEach(el => {
     el.addEventListener("click", () => {
       const code = el.getAttribute("data-code");
-      if (code) copyToClipboard(code);
-    });
-
-    // Hỗ trợ bàn phím Enter/Space khi focus vào chip
-    el.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" || e.key === " ") {
-        e.preventDefault();
-        const code = el.getAttribute("data-code");
-        if (code) copyToClipboard(code);
+      if (code) {
+        copyToClipboard(code);
       }
     });
   });
 
-  // 2. Lưu vào ví cá nhân
-  container.querySelectorAll('[data-action="save-wallet"]').forEach(btn => {
-    btn.addEventListener("click", () => {
-      const code = btn.getAttribute("data-code");
-      if (!code) return;
+  // 2. Lưu voucher vào ví
+  container.querySelectorAll('[data-action="save-wallet"]').forEach(el => {
+    el.addEventListener("click", () => {
+      const code = el.getAttribute("data-code");
+      if (code) {
+        const success = saveVoucherToWallet(code);
+        if (success) {
+          showVoucherToast(`Đã lưu mã "${code}" vào ví của bạn!`, "success");
+          updateVoucherStats();
+          renderVouchers();
+        } else {
+          showVoucherToast(`Mã "${code}" đã có trong ví hoặc không hợp lệ.`, "info");
+        }
+      }
+    });
+  });
 
-      const result = saveVoucherToWallet(code);
-      if (result.success) {
-        showVoucherToast(result.message, "success");
+  // 3. Xóa voucher khỏi ví
+  container.querySelectorAll('[data-action="remove-wallet"]').forEach(el => {
+    el.addEventListener("click", () => {
+      const code = el.getAttribute("data-code");
+      if (code) {
+        removeVoucherFromWallet(code);
+        showVoucherToast(`Đã bỏ lưu mã "${code}" khỏi ví!`, "info");
         updateVoucherStats();
         renderVouchers();
-      } else {
-        showVoucherToast(result.message, "error");
       }
-    });
-  });
-
-  // 3. Xóa khỏi ví cá nhân (trong tab My Wallet)
-  container.querySelectorAll('[data-action="remove-wallet"]').forEach(btn => {
-    btn.addEventListener("click", () => {
-      const code = btn.getAttribute("data-code");
-      if (!code) return;
-
-      const result = removeVoucherFromWallet(code);
-      showVoucherToast(result.message, "info");
-      updateVoucherStats();
-      renderVouchers();
     });
   });
 }
 
 /**
- * Sao chép mã vào clipboard kèm fallback an toàn
+ * Sao chép mã voucher vào Clipboard
  * @param {string} text 
  */
 function copyToClipboard(text) {
@@ -353,8 +375,6 @@ function copyToClipboard(text) {
   if (navigator.clipboard && window.isSecureContext) {
     navigator.clipboard.writeText(text).then(() => {
       showVoucherToast(`Đã sao chép mã "${text}" vào bộ nhớ tạm!`, "success");
-      // Tự động điền vào bộ mô phỏng để người dùng trải nghiệm ngay
-      autofillSimulator(text);
     }).catch(() => {
       fallbackCopyText(text);
     });
@@ -377,7 +397,6 @@ function fallbackCopyText(text) {
 
     if (successful) {
       showVoucherToast(`Đã sao chép mã "${text}"!`, "success");
-      autofillSimulator(text);
     } else {
       showVoucherToast(`Không thể sao chép tự động. Hãy ghi nhớ mã: ${text}`, "info");
     }
@@ -387,72 +406,57 @@ function fallbackCopyText(text) {
 }
 
 /**
- * Tự động điền mã vừa copy vào khung mô phỏng để test nhanh
- */
-function autofillSimulator(code) {
-  const simInput = document.getElementById("simVoucherCode");
-  if (simInput) {
-    simInput.value = code;
-    // Tự động kích hoạt tính toán thử
-    calculateSimulator();
-  }
-}
-
-/**
  * Chuyển tab giữa Kho Voucher Chung và Ví Voucher Của Tôi
  */
 function switchTab(tabName) {
   activeTab = tabName;
-  const tabAll = document.getElementById("tabAllVouchers");
-  const tabWallet = document.getElementById("tabMyWallet");
 
-  if (tabName === "all") {
-    if (tabAll) {
-      tabAll.classList.add("active");
-      tabAll.setAttribute("aria-selected", "true");
-    }
-    if (tabWallet) {
-      tabWallet.classList.remove("active");
-      tabWallet.setAttribute("aria-selected", "false");
-    }
-  } else {
-    if (tabWallet) {
-      tabWallet.classList.add("active");
-      tabWallet.setAttribute("aria-selected", "true");
-    }
-    if (tabAll) {
-      tabAll.classList.remove("active");
-      tabAll.setAttribute("aria-selected", "false");
-    }
+  document.querySelectorAll(".voucher-nav-tab").forEach(tab => {
+    tab.classList.toggle("active", tab.dataset.tab === tabName);
+  });
+
+  // Khi chuyển sang tab "Ví của tôi", ẩn bộ lọc pills; khi ở kho chung thì hiện lại
+  const filterPillsContainer = document.getElementById("voucherFilterPills");
+  if (filterPillsContainer) {
+    filterPillsContainer.style.display = tabName === "wallet" ? "none" : "flex";
   }
 
   renderVouchers();
 }
 
+/**
+ * Đăng ký sự kiện chuyển Tab
+ */
 function setupTabEvents() {
-  const tabAll = document.getElementById("tabAllVouchers");
-  const tabWallet = document.getElementById("tabMyWallet");
-
-  if (tabAll) {
-    tabAll.addEventListener("click", () => switchTab("all"));
-  }
-  if (tabWallet) {
-    tabWallet.addEventListener("click", () => switchTab("wallet"));
-  }
+  document.querySelectorAll(".voucher-nav-tab").forEach(tab => {
+    tab.addEventListener("click", () => {
+      const targetTab = tab.dataset.tab;
+      if (targetTab && targetTab !== activeTab) {
+        switchTab(targetTab);
+      }
+    });
+  });
 }
 
+/**
+ * Đăng ký sự kiện lọc trạng thái (Pills)
+ */
 function setupFilterEvents() {
-  const pills = document.querySelectorAll("#voucherFilterPills .filter-pill");
+  const pills = document.querySelectorAll(".filter-pill");
   pills.forEach(pill => {
     pill.addEventListener("click", () => {
       pills.forEach(p => p.classList.remove("active"));
       pill.classList.add("active");
-      activeStatusFilter = pill.getAttribute("data-filter") || "all";
+
+      activeStatusFilter = pill.dataset.filter || "all";
       renderVouchers();
     });
   });
 }
 
+/**
+ * Đăng ký sự kiện tìm kiếm voucher realtime
+ */
 function setupSearchEvents() {
   const searchInput = document.getElementById("voucherSearchInput");
   if (searchInput) {
@@ -460,103 +464,6 @@ function setupSearchEvents() {
       searchQuery = e.target.value;
       renderVouchers();
     });
-  }
-}
-
-/**
- * BƯỚC 5: XỬ LÝ KHU VỰC MÔ PHỎNG GIỎ HÀNG (Cart Voucher Simulator)
- * Đảm bảo tính toán chính xác tuyệt đối các test case
- */
-function setupSimulatorEvents() {
-  const subtotalInput = document.getElementById("simSubtotal");
-  const shippingInput = document.getElementById("simShipping");
-  const codeInput = document.getElementById("simVoucherCode");
-  const btnApply = document.getElementById("btnApplySimVoucher");
-
-  const btn1M = document.getElementById("btnPreset1M");
-  const btn500k = document.getElementById("btnPreset500k");
-  const btn200k = document.getElementById("btnPreset200k");
-
-  if (btn1M && subtotalInput) {
-    btn1M.addEventListener("click", () => {
-      subtotalInput.value = 1000000;
-      calculateSimulator();
-    });
-  }
-
-  if (btn500k && subtotalInput) {
-    btn500k.addEventListener("click", () => {
-      subtotalInput.value = 500000;
-      calculateSimulator();
-    });
-  }
-
-  if (btn200k && subtotalInput) {
-    btn200k.addEventListener("click", () => {
-      subtotalInput.value = 200000;
-      calculateSimulator();
-    });
-  }
-
-  if (subtotalInput) subtotalInput.addEventListener("input", calculateSimulator);
-  if (shippingInput) shippingInput.addEventListener("input", calculateSimulator);
-  if (btnApply) btnApply.addEventListener("click", calculateSimulator);
-
-  if (codeInput) {
-    codeInput.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") {
-        e.preventDefault();
-        calculateSimulator();
-      }
-    });
-  }
-
-  // Tính toán lần đầu khi mở trang (với preset 1.000.000đ và mã LHU2026)
-  calculateSimulator();
-}
-
-function calculateSimulator() {
-  const subtotalEl = document.getElementById("simSubtotal");
-  const shippingEl = document.getElementById("simShipping");
-  const codeEl = document.getElementById("simVoucherCode");
-  const alertEl = document.getElementById("simMessageAlert");
-
-  const resSubtotal = document.getElementById("resSubtotal");
-  const resShipping = document.getElementById("resShipping");
-  const resDiscount = document.getElementById("resDiscountAmount");
-  const resShipDiscount = document.getElementById("resShippingDiscount");
-  const resFinalShipping = document.getElementById("resFinalShipping");
-  const resFinalTotal = document.getElementById("resFinalTotal");
-
-  const subtotal = subtotalEl ? parseFloat(subtotalEl.value) || 0 : 0;
-  const shipping = shippingEl ? parseFloat(shippingEl.value) || 0 : 0;
-  const code = codeEl ? codeEl.value.trim() : "";
-
-  // Gọi trực tiếp hàm tính toán độc lập chuẩn
-  const result = calculateVoucherDiscount(code, subtotal, shipping);
-
-  // Hiển thị kết quả ra bảng
-  if (resSubtotal) resSubtotal.textContent = formatCurrency(result.subtotal);
-  if (resShipping) resShipping.textContent = formatCurrency(result.shippingFee);
-  if (resDiscount) resDiscount.textContent = `- ${formatCurrency(result.discountAmount)}`;
-  if (resShipDiscount) resShipDiscount.textContent = `- ${formatCurrency(result.shippingDiscount)}`;
-  if (resFinalShipping) resFinalShipping.textContent = formatCurrency(result.finalShippingFee);
-  if (resFinalTotal) resFinalTotal.textContent = formatCurrency(result.finalTotal);
-
-  // Hiển thị thông báo trạng thái
-  if (alertEl) {
-    alertEl.style.display = "block";
-    if (result.valid) {
-      alertEl.style.background = "#dcfce7";
-      alertEl.style.color = "#166534";
-      alertEl.style.border = "1px solid #86efac";
-      alertEl.textContent = `✓ ${result.message}`;
-    } else {
-      alertEl.style.background = "#fee2e2";
-      alertEl.style.color = "#991b1b";
-      alertEl.style.border = "1px solid #fca5a5";
-      alertEl.textContent = `✕ ${result.message}`;
-    }
   }
 }
 
