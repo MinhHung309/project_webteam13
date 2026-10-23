@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lịch Sử Đánh Giá | LHU E-Commerce Hub</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <!-- Header dùng chung -->
+  <header class="site-header">
+    <div class="container header-container">
+      <a href="../index.html" class="brand-logo">
+        <span class="logo-icon">LHU</span>
+        <span>E-Shop</span>
+      </a>
+      <button type="button" class="menu-toggle" id="menuToggle" aria-label="Menu">☰</button>
+      <nav class="main-nav" id="mainNav">
+        <ul class="nav-list">
+          <li><a href="../index.html" class="nav-link">Trang chủ</a></li>
+          <li><a href="./products.html" class="nav-link">Sản phẩm</a></li>
+          <li><a href="./vouchers.html" class="nav-link">Voucher</a></li>
+          <li><a href="./order-tracking.html" class="nav-link">Theo dõi đơn</a></li>
+          <li><a href="./auction.html" class="nav-link">Đấu giá</a></li>
+          <li><a href="./reviews.html" class="nav-link active">Đánh giá</a></li>
+        </ul>
+      </nav>
+      <div class="header-actions">
+        <a href="./cart.html" class="action-link">
+          <span>🛒</span>
+          <span>Giỏ hàng</span>
+          <span class="cart-counter" id="cartCount">0</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <div class="container">
+      <!-- Breadcrumb -->
+      <nav aria-label="Breadcrumb" style="margin-top: var(--spacing-lg); font-size: var(--font-size-xs); color: var(--gray-600);">
+        <a href="../index.html" style="color: var(--primary); text-decoration: none;">Trang chủ</a>
+        <span style="margin: 0 6px;">/</span>
+        <span style="color: var(--gray-800); font-weight: 600;">Lịch sử đánh giá</span>
+      </nav>
+
+      <!-- Tiêu đề trang -->
+      <div class="section-header" style="margin-top: var(--spacing-lg); margin-bottom: var(--spacing-xl);">
+        <div>
+          <h1 class="section-title">Lịch Sử Đánh Giá & Phản Hồi</h1>
+          <p class="section-subtitle">
+            Toàn bộ nhận xét và phản hồi sinh viên được lưu trữ trong hệ thống (LocalStorage Demo).
+          </p>
+        </div>
+        <div>
+          <button type="button" class="btn btn-outline btn-sm" id="btnResetReviews">
+            <span>↺ Đặt lại dữ liệu mẫu</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Thẻ tóm tắt số liệu -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--spacing-md); margin-bottom: var(--spacing-xl);">
+        <div style="background: var(--white); border: 1px solid var(--gray-200); border-radius: var(--border-radius-lg); padding: var(--spacing-lg); text-align: center;">
+          <div style="font-size: 2.25rem; font-weight: 800; color: var(--primary);" id="statTotalReviews">0</div>
+          <div style="font-size: var(--font-size-xs); color: var(--gray-600); font-weight: 600;">Tổng số đánh giá</div>
+        </div>
+        <div style="background: var(--white); border: 1px solid var(--gray-200); border-radius: var(--border-radius-lg); padding: var(--spacing-lg); text-align: center;">
+          <div style="font-size: 2.25rem; font-weight: 800; color: #f59e0b;" id="statAvgRating">0.0</div>
+          <div style="font-size: var(--font-size-xs); color: var(--gray-600); font-weight: 600;">Điểm trung bình toàn sàn</div>
+        </div>
+        <div style="background: var(--white); border: 1px solid var(--gray-200); border-radius: var(--border-radius-lg); padding: var(--spacing-lg); text-align: center;">
+          <div style="font-size: 2.25rem; font-weight: 800; color: var(--secondary);" id="statUserReviews">0</div>
+          <div style="font-size: var(--font-size-xs); color: var(--gray-600); font-weight: 600;">Đánh giá do bạn gửi</div>
+        </div>
+      </div>
+
+      <!-- Danh sách nhận xét -->
+      <section class="reviews-section" style="padding: var(--spacing-xl);">
+        <div class="reviews-filter-bar">
+          <div class="reviews-filter-pills" id="historyFilterPills">
+            <button type="button" class="filter-pill active" data-filter="all">Tất cả đánh giá</button>
+            <button type="button" class="filter-pill" data-filter="user_only">Đánh giá của bạn</button>
+            <button type="button" class="filter-pill" data-filter="demo_only">Dữ liệu mẫu (Demo)</button>
+          </div>
+          <div style="font-size: var(--font-size-xs); color: var(--gray-600);">
+            Tự động cập nhật từ LocalStorage
+          </div>
+        </div>
+
+        <div class="reviews-list-container" id="historyReviewsList">
+          <!-- Render tự động bởi js/pages/reviews-history.js -->
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-bottom">
+        <p>&copy; 2026 LHU E-Commerce. Phân hệ 2: Đánh giá & Phản hồi Khách hàng.</p>
+        <p><a href="../index.html" style="color: var(--gray-400);">Trang chủ</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <script type="module" src="../js/pages/reviews-history.js"></script>
+</body>
+</html>
