@@ -138,12 +138,12 @@ export function addProductReview(reviewData) {
       id: reviewId,
       productId: productId,
       userName: cleanUserName,
-      userRole: (userRole || "Khách ghé thăm (Demo)").trim(),
+      userRole: (userRole || "Sinh viên LHU").trim(),
       rating: numericRating,
       comment: cleanComment,
       createdAt: new Date().toISOString(),
       helpfulCount: 0,
-      isUserCreated: true // Đánh dấu nhận xét do người dùng tạo trong phiên demo
+      isUserCreated: true // Nhận xét do người dùng gửi trực tiếp
     };
 
     // 3. Lưu vào danh sách trong LocalStorage

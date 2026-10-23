@@ -351,7 +351,7 @@ function renderReviewsList(productId) {
     // Huy hiệu minh bạch: phân biệt rõ dữ liệu demo mẫu và nhận xét của người dùng
     const badgeHtml = rev.isUserCreated 
       ? `<span class="review-badge-user">Đánh giá của bạn</span>` 
-      : `<span class="review-badge-demo">Đánh giá mẫu (Demo)</span>`;
+      : "";
 
     return `
       <article class="review-item-card" id="review-${rev.id}">

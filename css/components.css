@@ -397,6 +397,449 @@
 }
 
 /* ==========================================================================
+   Upgraded Student Promo Banner Section (Split Modern Card with Ticket Visuals)
+   ========================================================================== */
+.student-promo-banner {
+  margin-bottom: var(--spacing-2xl);
+}
+
+.student-promo-card {
+  position: relative;
+  background: linear-gradient(135deg, #0f4c81 0%, #0d5db8 50%, #1a73e8 100%);
+  border-radius: var(--border-radius-xl);
+  padding: 2.75rem 3rem;
+  color: var(--white);
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  align-items: center;
+  gap: 2.5rem;
+  box-shadow: 0 16px 32px -8px rgba(13, 93, 184, 0.28), 0 4px 12px -2px rgba(15, 76, 129, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  overflow: hidden;
+}
+
+/* Background Geometry Patterns */
+.promo-bg-pattern {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.12) 0%, transparent 40%),
+    radial-gradient(circle at 90% 80%, rgba(255, 255, 255, 0.15) 0%, transparent 45%),
+    linear-gradient(45deg, transparent 48%, rgba(255, 255, 255, 0.03) 50%, transparent 52%);
+  background-size: cover, cover, 30px 30px;
+  pointer-events: none;
+}
+
+.student-promo-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.promo-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 0.35rem 0.85rem;
+  border-radius: var(--border-radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.4px;
+  margin-bottom: var(--spacing-sm);
+  color: #e0f2fe;
+}
+
+.promo-title {
+  font-size: clamp(1.4rem, 2.4vw, 1.85rem);
+  font-weight: var(--font-weight-extrabold);
+  line-height: 1.25;
+  color: var(--white);
+  margin-bottom: 0.6rem;
+  letter-spacing: -0.025em;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.promo-desc {
+  font-size: var(--font-size-sm);
+  line-height: 1.65;
+  color: #e2e8f0;
+  margin-bottom: 1.25rem;
+  max-width: 520px;
+}
+
+.promo-highlights {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  margin-bottom: 1.5rem;
+}
+
+.promo-highlight-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: var(--font-size-xs);
+  color: #f1f5f9;
+  font-weight: var(--font-weight-medium);
+}
+
+.highlight-bullet {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.25);
+  color: var(--white);
+  font-size: 11px;
+  font-weight: bold;
+}
+
+.student-promo-action {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.promo-btn {
+  background: var(--white) !important;
+  color: var(--primary) !important;
+  font-weight: var(--font-weight-bold) !important;
+  padding: 0.75rem 1.6rem !important;
+  font-size: var(--font-size-sm) !important;
+  border-radius: var(--border-radius-md) !important;
+  box-shadow: 0 4px 14px 0 rgba(0, 0, 0, 0.18) !important;
+  transition: all var(--transition-fast) !important;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+}
+
+.promo-btn:hover {
+  background-color: #f8fafc !important;
+  color: #0b4a94 !important;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px 0 rgba(0, 0, 0, 0.24) !important;
+}
+
+.promo-btn:hover .btn-arrow {
+  transform: translateX(4px);
+}
+
+.promo-hint {
+  font-size: var(--font-size-xs);
+  color: #cbd5e1;
+  font-style: italic;
+}
+
+/* Right Column: Visual Tickets System */
+.student-promo-visual {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  perspective: 1000px;
+}
+
+.promo-ticket-card {
+  background: rgba(255, 255, 255, 0.96);
+  color: var(--dark);
+  border-radius: var(--border-radius-lg);
+  padding: 1rem 1.25rem;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
+  position: relative;
+  transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+}
+
+.promo-ticket-card:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.22);
+}
+
+.ticket-primary {
+  border-left: 4px solid var(--accent);
+}
+
+.ticket-secondary {
+  border-left: 4px solid var(--success);
+  margin-left: 1.5rem;
+  background: rgba(255, 255, 255, 0.92);
+}
+
+.ticket-left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 85px;
+  text-align: center;
+}
+
+.ticket-label {
+  font-size: 10px;
+  font-weight: var(--font-weight-bold);
+  color: var(--gray-600);
+  letter-spacing: 0.5px;
+}
+
+.ticket-value {
+  font-size: 1.5rem;
+  font-weight: var(--font-weight-extrabold);
+  color: var(--primary);
+  line-height: 1.1;
+  margin: 2px 0;
+}
+
+.ticket-type {
+  font-size: 11px;
+  color: var(--gray-600);
+  font-weight: var(--font-weight-medium);
+}
+
+.ticket-divider {
+  width: 1px;
+  height: 48px;
+  background: #cbd5e1;
+  border-right: 1px dashed #94a3b8;
+  margin: 0 1.25rem;
+  position: relative;
+}
+
+/* Khuyết vé 2 bên divider */
+.ticket-divider::before,
+.ticket-divider::after {
+  content: "";
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: #0d5db8;
+  border-radius: 50%;
+  left: -6px;
+}
+.ticket-divider::before { top: -22px; }
+.ticket-divider::after { bottom: -22px; }
+
+.ticket-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.ticket-code-badge {
+  display: inline-block;
+  width: fit-content;
+  background: #eff6ff;
+  color: var(--primary);
+  border: 1px dashed var(--primary);
+  padding: 2px 8px;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  border-radius: var(--border-radius-xs);
+  letter-spacing: 0.5px;
+}
+
+.ticket-desc {
+  font-size: var(--font-size-xs);
+  color: var(--dark);
+  font-weight: var(--font-weight-medium);
+}
+
+.ticket-status {
+  font-size: 11px;
+  color: var(--success);
+  font-weight: var(--font-weight-semibold);
+}
+
+/* ==========================================================================
+   Upgraded Shopping Benefits Section (Clean Elevated Minimalist Cards)
+   ========================================================================== */
+.benefits-section {
+  margin-bottom: var(--spacing-2xl);
+  padding-top: var(--spacing-lg);
+  border-top: 1px solid var(--gray-200);
+}
+
+.benefits-header {
+  text-align: center;
+  max-width: 680px;
+  margin: 0 auto 2.5rem;
+}
+
+.benefits-tag {
+  display: inline-block;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  color: var(--primary);
+  letter-spacing: 0.08em;
+  margin-bottom: 0.35rem;
+  text-transform: uppercase;
+}
+
+.benefits-main-title {
+  font-size: clamp(1.4rem, 2.2vw, 1.85rem);
+  font-weight: var(--font-weight-bold);
+  color: var(--dark);
+  letter-spacing: -0.02em;
+  margin-bottom: 0.5rem;
+}
+
+.benefits-subtitle {
+  font-size: var(--font-size-sm);
+  color: var(--gray-600);
+  line-height: var(--line-height-base);
+}
+
+.benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+}
+
+.benefit-card {
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--border-radius-xl);
+  padding: 1.75rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  transition: all var(--transition-fast);
+  box-shadow: var(--shadow-xs);
+  position: relative;
+  overflow: hidden;
+}
+
+.benefit-card::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+
+.benefit-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px -4px rgba(16, 24, 40, 0.08), 0 4px 8px -2px rgba(16, 24, 40, 0.04);
+  border-color: rgba(13, 93, 184, 0.25);
+}
+
+.benefit-card:hover::after {
+  opacity: 1;
+}
+
+.benefit-icon-wrap {
+  width: 52px;
+  height: 52px;
+  border-radius: var(--border-radius-lg);
+  background: linear-gradient(135deg, var(--primary-light) 0%, #e0f2fe 100%);
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.25rem;
+  transition: transform var(--transition-fast), background var(--transition-fast);
+}
+
+.benefit-card:hover .benefit-icon-wrap {
+  transform: scale(1.08);
+  background: var(--primary);
+  color: var(--white);
+}
+
+.benefit-svg {
+  width: 26px;
+  height: 26px;
+  stroke: currentColor;
+}
+
+.benefit-title {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
+  color: var(--dark);
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.01em;
+}
+
+.benefit-desc {
+  font-size: var(--font-size-xs);
+  color: var(--gray-600);
+  line-height: 1.65;
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 992px) {
+  .student-promo-card {
+    grid-template-columns: 1fr;
+    padding: 2.25rem 2rem;
+    gap: 2rem;
+  }
+
+  .ticket-secondary {
+    margin-left: 0;
+  }
+
+  .benefits-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .student-promo-card {
+    padding: 1.5rem;
+  }
+
+  .student-promo-action {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+  }
+
+  .promo-btn {
+    justify-content: center;
+  }
+
+  .promo-ticket-card {
+    padding: 0.85rem 1rem;
+  }
+
+  .ticket-left {
+    min-width: 65px;
+  }
+
+  .ticket-value {
+    font-size: 1.25rem;
+  }
+
+  .benefits-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .benefit-card {
+    padding: 1.25rem;
+  }
+}
+
+/* ==========================================================================
    Categories Section & Cards System
    ========================================================================== */
 .categories-section {
@@ -1381,6 +1824,19 @@
   padding: 0.65rem 1.15rem;
   display: flex;
   flex-direction: column;
+  transition: all var(--transition-fast);
+}
+
+.voucher-stat-item.clickable {
+  cursor: pointer;
+  user-select: none;
+}
+
+.voucher-stat-item.clickable:hover {
+  background: rgba(255, 255, 255, 0.22);
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .voucher-stat-number {
