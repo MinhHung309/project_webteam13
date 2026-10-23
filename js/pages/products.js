@@ -492,7 +492,39 @@ function renderProductCards(products, container) {
               <span class="price-current">${formatCurrency(product.price)}</span>
               ${product.originalPrice ? `<span class="price-original">${formatCurrency(product.originalPrice)}</span>` : ""}
             </div>
-            
+
+            <div class="product-qty-row">
+              <span class="qty-label">Số lượng:</span>
+              <div class="product-qty-control" role="group" aria-label="Điều chỉnh số lượng cho ${product.name}">
+                <button 
+                  type="button" 
+                  class="btn-qty btn-qty-minus" 
+                  data-action="decrease-qty" 
+                  data-product-id="${product.id}"
+                  aria-label="Giảm số lượng ${product.name}"
+                  ${isOutOfStock ? "disabled" : ""}
+                >−</button>
+                <input 
+                  type="number" 
+                  class="product-qty-input" 
+                  data-product-id="${product.id}"
+                  value="1" 
+                  min="1" 
+                  max="99" 
+                  aria-label="Số lượng ${product.name}"
+                  ${isOutOfStock ? "disabled" : ""}
+                />
+                <button 
+                  type="button" 
+                  class="btn-qty btn-qty-plus" 
+                  data-action="increase-qty" 
+                  data-product-id="${product.id}"
+                  aria-label="Tăng số lượng ${product.name}"
+                  ${isOutOfStock ? "disabled" : ""}
+                >+</button>
+              </div>
+            </div>
+
             <div class="product-card-actions">
               <a 
                 href="./product-detail.html?id=${product.id}" 
@@ -521,11 +553,62 @@ function renderProductCards(products, container) {
 
   container.innerHTML = cardsHtml;
 
+  // Gắn sự kiện giảm số lượng (−)
+  container.querySelectorAll("button[data-action='decrease-qty']").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const card = btn.closest(".product-card");
+      if (!card) return;
+      const input = card.querySelector(".product-qty-input");
+      if (!input) return;
+      const currentVal = parseInt(input.value, 10) || 1;
+      if (currentVal > 1) {
+        input.value = currentVal - 1;
+      }
+    });
+  });
+
+  // Gắn sự kiện tăng số lượng (+)
+  container.querySelectorAll("button[data-action='increase-qty']").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const card = btn.closest(".product-card");
+      if (!card) return;
+      const input = card.querySelector(".product-qty-input");
+      if (!input) return;
+      const currentVal = parseInt(input.value, 10) || 1;
+      if (currentVal < 99) {
+        input.value = currentVal + 1;
+      }
+    });
+  });
+
+  // Gắn sự kiện thay đổi số lượng trực tiếp trong ô input
+  container.querySelectorAll(".product-qty-input").forEach(input => {
+    input.addEventListener("change", () => {
+      let val = parseInt(input.value, 10);
+      if (isNaN(val) || val < 1) {
+        input.value = 1;
+      } else if (val > 99) {
+        input.value = 99;
+      } else {
+        input.value = val;
+      }
+    });
+
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "-" || e.key === "e" || e.key === "E" || e.key === "+") {
+        e.preventDefault();
+      }
+    });
+  });
+
   // Gắn sự kiện Thêm vào giỏ hàng cho từng button
   container.querySelectorAll("button[data-action='add-to-cart']").forEach(btn => {
     btn.addEventListener("click", (e) => {
       const productId = btn.dataset.productId;
-      handleAddToCart(productId, btn);
+      const card = btn.closest(".product-card");
+      const input = card ? card.querySelector(".product-qty-input") : null;
+      const quantity = input ? Math.max(1, parseInt(input.value, 10) || 1) : 1;
+      handleAddToCart(productId, quantity, btn, input);
     });
   });
 }
@@ -533,13 +616,23 @@ function renderProductCards(products, container) {
 /**
  * Xử lý khi click "Thêm vào giỏ hàng" bằng utils dùng chung
  * @param {string} productId 
+ * @param {number} quantity
  * @param {HTMLButtonElement} buttonEl 
+ * @param {HTMLInputElement|null} inputEl
  */
-function handleAddToCart(productId, buttonEl) {
-  const result = addToCart(productId, 1);
+function handleAddToCart(productId, quantity = 1, buttonEl, inputEl = null) {
+  const result = addToCart(productId, quantity);
 
   if (result.success) {
-    showToast("success", "✓ Đã thêm sản phẩm vào giỏ hàng thành công!");
+    const successMsg = quantity > 1 
+      ? `✓ Đã thêm ${quantity} sản phẩm vào giỏ hàng thành công!` 
+      : "✓ Đã thêm sản phẩm vào giỏ hàng thành công!";
+    showToast("success", successMsg);
+
+    // Đặt lại ô số lượng về 1 sau khi thêm thành công
+    if (inputEl) {
+      inputEl.value = 1;
+    }
     
     // Hiệu ứng phản hồi trên nút
     const originalText = buttonEl.innerHTML;
