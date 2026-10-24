@@ -39,6 +39,10 @@ document.addEventListener("DOMContentLoaded", () => {
   setupFilterEvents();
   setupSearchEvents();
   setupBannerStatsEvents();
+  window.addEventListener("lhu:auth-updated", () => {
+    updateVoucherStats();
+    renderVouchers();
+  });
 });
 
 /**

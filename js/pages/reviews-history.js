@@ -11,6 +11,7 @@ import {
   setStorageItem 
 } from "../utils/storage.js";
 import { getAllReviews, initReviewsStorage } from "../modules/reviews.js";
+import { getCurrentUser } from "../modules/auth.js";
 
 let historyFilter = "all";
 
@@ -21,12 +22,20 @@ document.addEventListener("DOMContentLoaded", () => {
   renderHistoryList();
   setupFilterEvents();
   setupResetButton();
+  window.addEventListener("lhu:auth-updated", () => {
+    renderHistoryStats();
+    renderHistoryList();
+  });
 });
 
 function renderHistoryStats() {
   const reviews = getAllReviews();
   const total = reviews.length;
-  const userReviewsCount = reviews.filter(r => r.isUserCreated).length;
+  const currentUser = getCurrentUser();
+  const userReviewsCount = reviews.filter(review => currentUser
+    ? review.userId === currentUser.id
+    : review.isUserCreated && !review.userId
+  ).length;
 
   let sum = 0;
   reviews.forEach(r => sum += (r.rating || 0));
@@ -49,7 +58,11 @@ function renderHistoryList() {
   const products = getStorageItem(STORAGE_KEYS.PRODUCTS, INITIAL_PRODUCTS);
 
   if (historyFilter === "user_only") {
-    reviews = reviews.filter(r => r.isUserCreated);
+    const currentUser = getCurrentUser();
+    reviews = reviews.filter(review => currentUser
+      ? review.userId === currentUser.id
+      : review.isUserCreated && !review.userId
+    );
   } else if (historyFilter === "community_only") {
     reviews = reviews.filter(r => !r.isUserCreated);
   }

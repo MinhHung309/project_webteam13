@@ -185,3 +185,23 @@
 - Đây là mô phỏng phía trình duyệt, không có đăng nhập thật, backend, khóa giao dịch đồng thời, đồng bộ thiết bị hoặc bảo đảm chống chỉnh sửa localStorage.
 - Nhóm có thể bổ sung liên kết "Đấu giá của tôi" vào điều hướng chung nếu muốn hiển thị trên mọi trang; hiện người dùng truy cập mục này từ trang Sàn đấu giá.
 - Giao diện hiện dùng ảnh demo từ Unsplash; có thể thay bằng tài sản nội bộ trước khi triển khai nếu cần hoạt động hoàn toàn offline.
+
+---
+
+## Prompt 06 — Hồ sơ và phiên người dùng demo
+**Ngày thực hiện**: 24/10/2026
+
+### Mục tiêu
+- Bổ sung đăng ký, đăng nhập, hồ sơ cá nhân và đăng xuất bằng HTML/CSS/JavaScript thuần.
+- Liên kết userId ổn định với hoạt động mới ở Review, Order, Voucher và Auction; bảo toàn giỏ khách và dữ liệu lịch sử hiện có.
+
+### Thay đổi
+- Thêm các trang login/register/profile, CSS tài khoản, module quản lý hồ sơ/phiên demo và controller cho từng trang.
+- Hồ sơ lưu ở `lhu_demo_users` không có trường mật khẩu. Phiên không ghi nhớ dùng `sessionStorage`; phiên ghi nhớ dùng `localStorage`. Mật khẩu biểu mẫu chỉ được kiểm tra có nội dung và xác nhận khớp, không được lưu hoặc xác minh khi đăng nhập.
+- Header hiển thị đăng nhập/đăng ký hoặc menu hồ sơ, đơn hàng, voucher, đấu giá và đăng xuất.
+- Cart khách vẫn dùng `lhu_cart_items`; dữ liệu lịch sử cũ chưa có userId không được tự gán; ví voucher legacy được giữ nguyên và không migrate.
+
+### Kiểm thử và giới hạn xác minh
+- Đã rà soát tĩnh cấu trúc thư mục, các khóa lưu trữ, các controller navigation và điểm ghi dữ liệu của những module liên quan.
+- VS Code Problems không báo lỗi trên workspace sau khi cập nhật.
+- Chưa chạy test tương tác 1–13 trong trình duyệt. Quyền mở trình duyệt và chạy test runner trong phiên này bị từ chối; không đánh dấu các luồng tương tác, console, responsive hoặc hồi quy module là đạt.

@@ -1,6 +1,7 @@
 import { INITIAL_ORDERS } from "../data/orders.js";
 import { initNavigation } from "../modules/nav.js";
 import { getStorageItem, setStorageItem, STORAGE_KEYS, formatCurrency } from "../utils/storage.js";
+import { getCurrentUser } from "../modules/auth.js";
 
 const DELIVERY_STEPS = [
   { id: "placed", title: "Đặt hàng thành công", icon: "✓" },
@@ -31,6 +32,7 @@ let orders = [];
 document.addEventListener("DOMContentLoaded", () => {
   initNavigation();
   orders = loadOrders();
+  filterOrdersForCurrentUser();
   renderOrderHistory();
   setupSearch();
   setupHistoryFilters();
@@ -41,7 +43,19 @@ document.addEventListener("DOMContentLoaded", () => {
     if (input) input.value = requestedOrder;
     lookupOrder(requestedOrder);
   }
+  window.addEventListener("lhu:auth-updated", () => {
+    clearCountdown();
+    orders = loadOrders();
+    filterOrdersForCurrentUser();
+    renderOrderHistory();
+    hideOrderResult(document.getElementById("orderResult"), document.getElementById("orderEmptyState"));
+  });
 });
+
+function filterOrdersForCurrentUser() {
+  const user = getCurrentUser();
+  if (user) orders = orders.filter(order => order.userId === user.id);
+}
 
 function loadOrders() {
   const stored = getStorageItem(STORAGE_KEYS.ORDERS, null);
@@ -134,6 +148,7 @@ function normalizeOrder(rawOrder) {
 
   return {
     id,
+    userId: typeof rawOrder.userId === "string" ? rawOrder.userId : null,
     createdAt: typeof rawOrder.createdAt === "string" ? rawOrder.createdAt : "",
     items,
     subtotal,

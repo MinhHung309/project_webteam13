@@ -18,7 +18,13 @@ Dự án website thương mại điện tử sinh viên Đại học Lạc Hồn
 4. **Theo dõi đơn hàng**: Kiểm tra hành trình đơn hàng theo mã vận đơn từ trạng thái đóng gói đến giao nhận.
 5. **Sàn đấu giá**: Không gian đấu giá đồ dùng học tập cũ, tự động cập nhật giá thầu cao nhất và đếm ngược.
 
-*Lưu ý: Ở phiên bản bộ khung hiện tại, các chức năng phức tạp được gắn nhãn "Đang phát triển" minh bạch và chưa đưa vào hoạt động logic đầy đủ.*
+*Các luồng Cart, Voucher, Tracking và Auction hiện là mô phỏng cục bộ; không xử lý thanh toán hay giao dịch thật.*
+
+## 👤 Hồ sơ người dùng demo
+
+Website có trang đăng ký hồ sơ demo, đăng nhập, hồ sơ cá nhân và đăng xuất để liên kết hoạt động mới với một `userId` ổn định. Hồ sơ được lưu trong trình duyệt; lựa chọn "Ghi nhớ" dùng `localStorage`, còn phiên thông thường dùng `sessionStorage`. Không lưu mật khẩu, không có gửi email đặt lại mật khẩu và mật khẩu nhập vào không được xác minh. Đây không phải xác thực danh tính hay cơ chế bảo mật tài khoản thực tế.
+
+Các bản ghi Cart và dữ liệu lịch sử cũ chưa có `userId` được giữ nguyên, không tự gán sang hồ sơ mới. Cart khách tiếp tục dùng chung khóa hiện có; chỉ đơn hàng/đánh giá/đặt giá mới khi có phiên demo được gắn `userId`. Ví voucher mới được lưu riêng theo hồ sơ, còn ví cũ không gán chủ sở hữu được giữ ở khóa legacy.
 
 ## 📁 Cấu Trúc Thư Mục
 
@@ -33,19 +39,24 @@ project_webteam13/
 │   ├── style.css               # Điểm nhập CSS
 │   ├── variables.css           # Biến màu, font, spacing
 │   ├── layout.css              # Header, footer, navbar
-│   └── components.css          # Cards, buttons, hero
+│   ├── components.css          # Cards, buttons, hero
+│   └── account.css             # Form và hồ sơ demo
 ├── js/                         # JavaScript thuần (ES Modules)
 │   ├── main.js                 # Điểm nhập JS
 │   ├── data/products.js        # Dữ liệu sản phẩm mẫu
 │   ├── utils/storage.js        # LocalStorage & format tiền tệ
 │   ├── modules/nav.js          # Menu di động & giỏ hàng
+│   ├── modules/auth.js         # Hồ sơ và phiên demo (không lưu mật khẩu)
 │   └── pages/home.js           # Render trang chủ
 ├── pages/                      # Khung các trang phân hệ
 │   ├── products.html
 │   ├── cart.html
 │   ├── vouchers.html
 │   ├── order-tracking.html
-│   └── auction.html
+│   ├── auction.html
+│   ├── login.html
+│   ├── register.html
+│   └── profile.html
 └── docs/                       # Tài liệu thiết kế
     └── architecture.md
 ```

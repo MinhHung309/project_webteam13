@@ -18,6 +18,7 @@ import {
   addProductReview,
   toggleHelpfulReview 
 } from "../modules/reviews.js";
+import { AUTH_UPDATED_EVENT, getCurrentUser } from "../modules/auth.js";
 
 // Trạng thái cục bộ của trang
 let currentProductId = "lhu_prod_001";
@@ -47,6 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
   setupStarRatingEvents();
   setupReviewForm();
   setupFilterPills();
+  window.addEventListener(AUTH_UPDATED_EVENT, syncReviewIdentity);
 });
 
 /**
@@ -460,6 +462,7 @@ function setupReviewForm() {
   const commentCounter = document.getElementById("commentCounter");
 
   if (!form) return;
+  syncReviewIdentity();
 
   // Đếm số ký tự khi nhập nhận xét
   if (commentInput && commentCounter) {
@@ -485,6 +488,10 @@ function setupReviewForm() {
 
   form.addEventListener("submit", (e) => {
     e.preventDefault();
+    if (!getCurrentUser()) {
+      showToast("Đăng nhập bằng hồ sơ demo để gắn đánh giá với userId của bạn.", "error");
+      return;
+    }
 
     // 1. Kiểm tra dữ liệu hợp lệ (Validation)
     let isValid = true;
@@ -567,6 +574,18 @@ function setupReviewForm() {
       showToast(result.message, "error");
     }
   });
+}
+
+function syncReviewIdentity() {
+  const nameInput = document.getElementById("reviewerName");
+  const notice = document.getElementById("reviewAccountNotice");
+  const currentUser = getCurrentUser();
+  if (nameInput) {
+    nameInput.readOnly = Boolean(currentUser);
+    nameInput.toggleAttribute("aria-readonly", Boolean(currentUser));
+    if (currentUser) nameInput.value = currentUser.fullName;
+  }
+  if (notice) notice.hidden = Boolean(currentUser);
 }
 
 /**

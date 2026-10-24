@@ -8,6 +8,7 @@ Dự án LHU E-Commerce được xây dựng bởi nhóm 2 sinh viên trường 
 - **Mô hình Module**: JavaScript ES Modules (`import` / `export`), không sử dụng bundler hay framework nặng.
 - **Styling**: CSS Custom Properties (CSS Variables), CSS Grid, Flexbox, hỗ trợ đa màn hình (Mobile, Tablet, Desktop) không cần thư viện bên ngoài (Bootstrap hay Tailwind).
 - **Lưu trữ dữ liệu**: Dữ liệu tĩnh ban đầu (`js/data/products.js`) kết hợp Client-side Storage (`localStorage`), chưa tích hợp backend hoặc API ngoài.
+- **Danh tính demo**: `js/modules/auth.js` quản lý hồ sơ cục bộ và phiên `sessionStorage`/`localStorage`; đây không phải xác thực an toàn. Không lưu mật khẩu hay token giả.
 - **Tương thích hosting**: GitHub Pages với đường dẫn tương đối (`./` và `../`), sẵn sàng hoạt động ở cả root domain hoặc subpath repository (`/project_webteam13/`).
 
 ## 3. Cấu trúc thư mục
@@ -22,7 +23,8 @@ project_webteam13/
 │   ├── style.css               # Entry file CSS import các module css
 │   ├── variables.css           # Design tokens: màu sắc, typography, spacing
 │   ├── layout.css              # Header, responsive nav, container, footer
-│   └── components.css          # Cards, buttons, badges, banners, placeholders
+│   ├── components.css          # Cards, buttons, badges, banners, placeholders
+│   └── account.css             # Form và hồ sơ demo
 ├── js/
 │   ├── main.js                 # Entry point JavaScript
 │   ├── data/
@@ -30,7 +32,8 @@ project_webteam13/
 │   ├── utils/
 │   │   └── storage.js          # Helper format tiền tệ & LocalStorage an toàn
 │   ├── modules/
-│   │   └── nav.js              # Module điều hướng & mobile menu toggle
+│   │   ├── nav.js              # Điều hướng, trạng thái tài khoản & mobile menu
+│   │   └── auth.js             # Hồ sơ và phiên người dùng demo
 │   └── pages/
 │       └── home.js             # Render giao diện trang chủ động
 ├── pages/                      # Khung các trang tương ứng 5 phân hệ
@@ -38,7 +41,10 @@ project_webteam13/
 │   ├── cart.html               # Phân hệ giỏ hàng
 │   ├── vouchers.html           # Phân hệ voucher
 │   ├── order-tracking.html     # Phân hệ theo dõi đơn hàng
-│   └── auction.html            # Phân hệ đấu giá
+│   ├── auction.html            # Phân hệ đấu giá
+│   ├── login.html              # Đăng nhập demo
+│   ├── register.html           # Đăng ký hồ sơ demo
+│   └── profile.html            # Tài khoản của tôi
 └── docs/
     └── architecture.md         # Tài liệu kiến trúc dự án
 ```
@@ -49,3 +55,10 @@ project_webteam13/
 3. **Hệ thống Voucher**: Nhập mã giảm giá, kiểm tra điều kiện áp dụng và giảm trừ trực tiếp trên tổng đơn giỏ hàng.
 4. **Theo dõi đơn hàng**: Nhập mã đơn (Order Code) để hiển thị lịch trình trạng thái: Chờ xử lý -> Đang đóng gói -> Đang giao -> Đã hoàn thành.
 5. **Sàn đấu giá**: Mô phỏng phiên đấu giá trực tiếp, đặt bước giá tối thiểu và đếm ngược thời gian kết thúc.
+
+## 5. Tài khoản demo và dữ liệu lịch sử
+- `pages/login.html`, `pages/register.html` và `pages/profile.html` cung cấp luồng hồ sơ demo phía trình duyệt.
+- `js/modules/nav.js` dựng các liên kết tài khoản trong header hiện có; không thay cấu trúc Cart hay tạo một hệ thống tài khoản thứ hai.
+- Hoạt động mới của Review, Order và Auction nhận `userId` từ hồ sơ hiện tại. Ví voucher mới được lưu trong `lhu_demo_vouchers_by_user`.
+- Dữ liệu legacy chưa có chủ sở hữu không được migrate hoặc gán cho tài khoản mới. Giỏ hàng tiếp tục sử dụng `lhu_cart_items` toàn cục để bảo toàn giỏ khách.
+- Tài khoản/hồ sơ được lưu ở trình duyệt, có thể bị xem/sửa/xóa bằng công cụ trình duyệt; không dùng dữ liệu cá nhân thật.

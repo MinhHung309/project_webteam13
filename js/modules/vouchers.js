@@ -18,12 +18,14 @@ import {
   initializeStorageItem,
   formatCurrency 
 } from "../utils/storage.js";
+import { getCurrentUser } from "./auth.js";
 
 // Khóa riêng cho module voucher trong localStorage để không xung đột với các module khác
 export const VOUCHER_STORAGE_KEYS = {
   ALL_VOUCHERS: STORAGE_KEYS.VOUCHERS || "lhu_vouchers",
   SAVED_VOUCHERS: "lhu_saved_vouchers", // Mảng các code hoặc id voucher người dùng đã lưu
-  APPLIED_VOUCHER: "lhu_applied_voucher" // Voucher đang được áp dụng trong phiên mua sắm
+  APPLIED_VOUCHER: "lhu_applied_voucher", // Voucher đang được áp dụng trong phiên mua sắm
+  SAVED_BY_USER: STORAGE_KEYS.DEMO_VOUCHERS_BY_USER
 };
 
 /**
@@ -56,7 +58,13 @@ export function getAllVouchers() {
  */
 export function getSavedVoucherCodes() {
   initVouchersStorage();
-  const saved = getStorageItem(VOUCHER_STORAGE_KEYS.SAVED_VOUCHERS, []);
+  const user = getCurrentUser();
+  const stored = user
+    ? getStorageItem(VOUCHER_STORAGE_KEYS.SAVED_BY_USER, {})
+    : getStorageItem(VOUCHER_STORAGE_KEYS.SAVED_VOUCHERS, []);
+  const saved = user && stored && typeof stored === "object" && !Array.isArray(stored)
+    ? stored[user.id] || []
+    : stored;
   return Array.isArray(saved) ? saved : [];
 }
 
@@ -113,7 +121,7 @@ export function saveVoucherToWallet(code) {
   }
 
   savedCodes.push(cleanCode);
-  const ok = setStorageItem(VOUCHER_STORAGE_KEYS.SAVED_VOUCHERS, savedCodes);
+  const ok = saveCurrentWallet(savedCodes);
 
   if (!ok) {
     return { success: false, message: "Không thể lưu vào bộ nhớ trình duyệt do dung lượng đầy." };
@@ -132,8 +140,19 @@ export function removeVoucherFromWallet(code) {
   const savedCodes = getSavedVoucherCodes();
   const newSaved = savedCodes.filter(c => c !== cleanCode);
 
-  setStorageItem(VOUCHER_STORAGE_KEYS.SAVED_VOUCHERS, newSaved);
-  return { success: true, message: `Đã xóa mã "${cleanCode}" khỏi Ví của bạn.` };
+  const saved = saveCurrentWallet(newSaved);
+  return saved
+    ? { success: true, message: `Đã xóa mã "${cleanCode}" khỏi Ví của bạn.` }
+    : { success: false, message: "Không thể cập nhật ví voucher trong bộ nhớ trình duyệt." };
+}
+
+function saveCurrentWallet(codes) {
+  const user = getCurrentUser();
+  if (!user) return setStorageItem(VOUCHER_STORAGE_KEYS.SAVED_VOUCHERS, codes);
+  const stored = getStorageItem(VOUCHER_STORAGE_KEYS.SAVED_BY_USER, {});
+  const wallets = stored && typeof stored === "object" && !Array.isArray(stored) ? stored : {};
+  wallets[user.id] = codes;
+  return setStorageItem(VOUCHER_STORAGE_KEYS.SAVED_BY_USER, wallets);
 }
 
 /**

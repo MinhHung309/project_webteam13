@@ -1,6 +1,6 @@
 # Thiết Kế Cấu Trúc Dữ Liệu Dùng Chung (Data Architecture Spec)
 
-Tài liệu này xác định mô hình dữ liệu chuẩn, kiểu dữ liệu, quy ước ID, quy tắc lưu trữ `localStorage`, giao tiếp giữa 5 phân hệ và tiêu chí kiểm thử cho dự án **LHU E-Commerce Platform**.
+Tài liệu này xác định mô hình dữ liệu chuẩn, kiểu dữ liệu, quy ước ID, quy tắc lưu trữ `localStorage`, giao tiếp giữa 5 phân hệ và hồ sơ demo cho dự án **LHU E-Commerce Platform**.
 
 ---
 
@@ -25,7 +25,7 @@ Tất cả các thực thể trong hệ thống sử dụng định dạng khóa
 
 ---
 
-## 2. Chi Tiết Schema 5 Phân Hệ
+## 2. Chi Tiết Schema 5 Phân Hệ và Hồ Sơ Demo
 
 ### 2.1. Phân hệ 1: Sản phẩm & Danh mục (`js/data/products.js`)
 ```typescript
@@ -57,6 +57,7 @@ interface Product {
 interface Review {
   id: string;              // "rev_001"
   productId: string;       // "lhu_prod_001" (Khóa ngoại tham chiếu Product.id)
+  userId: string;          // ID hồ sơ demo của đánh giá mới; legacy không có trường này
   userName: string;        // "Nguyễn Văn Hùng"
   userRole: string;        // "Sinh viên CNTT - K22"
   rating: number;          // 1 đến 5 (số nguyên)
@@ -103,6 +104,7 @@ interface OrderItem {
 interface Order {
   id: string;              // "ord_20261019_001"
   orderCode: string;       // "LHU-ORD-8821" (Mã khách hàng dùng tra cứu)
+  userId: string | null;   // ID hồ sơ demo; null với đơn khách/đơn cũ chưa gán chủ sở hữu
   customer: {
     fullName: string;
     studentId: string;     // Mã số sinh viên LHU
@@ -138,12 +140,15 @@ interface Order {
 
 `js/data/orders.js` retains the existing `lhu_orders` storage key and legacy order records, and includes five additional demo records (`LHU-2026-001` through `LHU-2026-005`) for the tracking/history page. The new demo shape uses `id`, `customerName`, `createdAt`, `items`, `subtotal`, `discount`, `shippingFee`, `total`, `shippingAddress`, `shippingMethod`, `status`, `estimatedDelivery`, and `statusHistory`. These are fictional records for coursework only.
 
-`js/pages/order-tracking.js` reads and validates stored records, adapts legacy `orderCode`/`pricing`/`timeline` fields for display, and adds only missing demo IDs without replacing existing orders. Checkout appends an order snapshot to `lhu_orders` using `id`/`orderCode`, `customer`, `items`, `voucherApplied`, `subtotal`, `discount`, `shippingFee`, `shippingDiscount`, `taxAmount`, `total`, `shippingAddress`, `paymentMethod`, `status`, and `statusHistory`. Order totals are read from the saved snapshot and are not recalculated from current products or vouchers. The checkout demo uses a 30,000 VND delivery fee and zero tax because the project has no tax configuration; shipping vouchers reduce the shipping component separately from product discounts. The active cart stores only `{ productId, quantity }`; prices and product display data are resolved from the product catalog.
+`js/pages/order-tracking.js` reads and validates stored records, adapts legacy `orderCode`/`pricing`/`timeline` fields for display, and adds only missing demo IDs without replacing existing orders. Checkout appends an order snapshot to `lhu_orders` using `id`/`orderCode`, optional `userId`, `customer`, `items`, `voucherApplied`, `subtotal`, `discount`, `shippingFee`, `shippingDiscount`, `taxAmount`, `total`, `shippingAddress`, `paymentMethod`, `status`, and `statusHistory`. Order totals are read from the saved snapshot and are not recalculated from current products or vouchers. The checkout demo uses a 30,000 VND delivery fee and zero tax because the project has no tax configuration; shipping vouchers reduce the shipping component separately from product discounts. The active cart stores only `{ productId, quantity }`; prices and product display data are resolved from the product catalog.
+
+Existing orders, sample reviews, saved vouchers, and bids without profile identifiers remain unassigned; no account migration is performed. Logged-in order/review/bid history only includes records carrying the current `userId`. This is a client-side association/filter, not privacy protection.
 
 ### 2.5. Phân hệ 5: Sàn đấu giá sinh viên (`js/data/auctions.js`)
 ```typescript
 interface Bid {
   bidId: string;           // "bid_001_1"
+  bidderId: string;        // userId của hồ sơ demo cho lượt đặt mới
   bidderName: string;      // "Nguyễn V. Nam"
   bidderMasked: string;    // "Nguyễn V. N***" (Bảo vệ thông tin cá nhân)
   amount: number;          // 240000
@@ -171,6 +176,24 @@ interface AuctionItem {
   bids: Bid[];             // Lịch sử trả giá xếp theo thời gian tăng dần
 }
 ```
+
+### 2.6. Hồ sơ và phiên người dùng demo (`js/modules/auth.js`)
+```typescript
+interface DemoUser {
+  id: string;              // userId ổn định, ví dụ "lhu-user-<uuid>"
+  fullName: string;
+  email: string;           // chuẩn hóa chữ thường
+  phone: string;           // tùy chọn
+  address: string;         // địa chỉ giao hàng demo, tùy chọn
+  createdAt: string;       // ISO 8601
+}
+
+interface DemoSession {
+  version: 1;
+  userId: string;
+}
+```
+`DemoUser` không có trường mật khẩu. Phiên ghi nhớ nằm trong `localStorage`; phiên không ghi nhớ nằm trong `sessionStorage`. Dữ liệu phiên chỉ là định danh giả lập có thể bị sửa trong trình duyệt, không phải token bảo mật hoặc xác thực thực tế.
 
 ---
 
@@ -258,6 +281,15 @@ flowchart TD
 - `lhu_orders`: Lịch sử các đơn hàng đã đặt (khởi tạo từ `INITIAL_ORDERS`).
 - `lhu_auctions`: Danh sách các phiên đấu giá (khởi tạo từ `INITIAL_AUCTIONS`).
 - `lhu_user_prefs`: Cài đặt cá nhân sinh viên (chế độ xem, cơ sở học tập mặc định).
+- `lhu_demo_users`: Hồ sơ demo không chứa mật khẩu.
+- `lhu_demo_session`: Phiên demo tạm thời trong `sessionStorage`.
+- `lhu_demo_remembered_session`: Phiên demo được ghi nhớ trong `localStorage`.
+- `lhu_demo_vouchers_by_user`: Ví voucher mới theo userId.
+- `lhu_saved_vouchers`: Ví voucher legacy không có chủ sở hữu; giữ nguyên, không tự gán cho hồ sơ mới.
+- `lhu_applied_voucher`: Voucher áp dụng cho giỏ hàng hiện tại; tiếp tục dùng khóa chung hiện có.
+- `lhu_auction_sessions_v1`: Dữ liệu phiên và lịch sử đấu giá hiện hành; lượt đặt cũ giữ nguyên bidderId cũ.
+
+Các bản ghi order/review/auction cũ không có userId không được migrate hoặc tự gán. Cart vẫn dùng `lhu_cart_items` toàn cục để không làm mất giỏ khách. Đây chỉ là phân tách dữ liệu giao diện trong trình duyệt, không phải bảo vệ quyền riêng tư.
 
 ### 4.2. Nguyên tắc an toàn dữ liệu
 1. **Khởi tạo có điều kiện (`initializeStorageItem`)**: Khi người dùng vào website lần đầu, hệ thống chỉ ghi nạp dữ liệu mẫu vào `localStorage` nếu khóa đó chưa có dữ liệu (`null` hoặc `undefined`). Không ghi đè nếu dữ liệu người dùng đã tồn tại.

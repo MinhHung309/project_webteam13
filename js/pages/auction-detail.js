@@ -1,13 +1,14 @@
 import { initNavigation } from "../modules/nav.js";
 import {
   AUCTION_STORAGE_KEY,
-  DEMO_AUCTION_USER,
   formatAuctionDate,
   getAuctionById,
+  getAuctionDemoUser,
   getAuctionStatus,
   placeAuctionBid
 } from "../modules/auction.js";
 import { formatCurrency } from "../utils/storage.js";
+import { AUTH_UPDATED_EVENT, getCurrentUser } from "../modules/auth.js";
 
 const content = document.getElementById("auctionDetailContent");
 const historySection = document.getElementById("auctionHistorySection");
@@ -29,6 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   window.addEventListener("storage", handleStorage);
   window.addEventListener("lhu:auction-updated", renderDetail);
+  window.addEventListener(AUTH_UPDATED_EVENT, () => renderDetail());
   window.addEventListener("pagehide", cleanup, { once: true });
 });
 
@@ -99,11 +101,16 @@ function renderDetail(message = "") {
   input.inputMode = "numeric";
   input.setAttribute("aria-describedby", "auctionBidHint auctionBidFeedback");
   input.placeholder = String(auction.currentPrice + auction.minimumIncrement);
-  const hint = node("span", "auction-form-hint", `Giá tối thiểu kế tiếp: ${formatCurrency(auction.currentPrice + auction.minimumIncrement)}. Người dùng: ${DEMO_AUCTION_USER.name}.`);
+  const bidder = getAuctionDemoUser();
+  const currentUser = getCurrentUser();
+  const hintText = currentUser
+    ? `Giá tối thiểu kế tiếp: ${formatCurrency(auction.currentPrice + auction.minimumIncrement)}. Người dùng: ${bidder.name}.`
+    : `Giá tối thiểu kế tiếp: ${formatCurrency(auction.currentPrice + auction.minimumIncrement)}. Đăng nhập để gắn lượt đặt giá với hồ sơ demo.`;
+  const hint = node("span", "auction-form-hint", hintText);
   hint.id = "auctionBidHint";
   const submit = node("button", "btn btn-primary", "Đặt giá");
   submit.type = "submit";
-  submit.disabled = status !== "active" || auction.highestBidder?.id === DEMO_AUCTION_USER.id;
+  submit.disabled = status !== "active" || !currentUser || auction.highestBidder?.id === bidder.id;
   const feedback = node("p", "auction-feedback", message);
   feedback.id = "auctionBidFeedback";
   feedback.setAttribute("role", "status");
