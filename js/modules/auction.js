@@ -1,4 +1,4 @@
-import { DEMO_AUCTIONS } from "../data/auction-demo.js";
+﻿import { DEMO_AUCTIONS } from "../data/auction-demo.js";
 import { formatCurrency, getStorageItem, setStorageItem } from "../utils/storage.js";
 import { getCurrentUser } from "./auth.js";
 
@@ -148,7 +148,7 @@ export function placeAuctionBid(auctionId, inputValue) {
   const auction = store.auctions.find(item => item.id === auctionId);
   const currentUser = getCurrentUser();
   if (!currentUser) {
-    return { success: false, message: "Vui lòng đăng nhập bằng hồ sơ demo trước khi đặt giá." };
+    return { success: false, message: "Vui lòng đăng nhập để tham gia đặt giá." };
   }
   const bidder = { id: currentUser.id, name: currentUser.fullName };
   if (!auction) return { success: false, message: "Không tìm thấy phiên đấu giá." };
@@ -228,3 +228,4 @@ export function formatAuctionDate(value) {
     timeStyle: "short"
   }).format(new Date(value));
 }
+

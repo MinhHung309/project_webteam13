@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Module quản lý Header, Mobile Navigation và đồng bộ trạng thái giỏ hàng (Cart Badge)
  */
 
@@ -130,7 +130,7 @@ function renderAccountActions(headerActions) {
     signOut.textContent = "Đăng xuất";
     signOut.addEventListener("click", () => {
       if (!logout()) {
-        window.alert("Không thể xóa phiên demo khỏi bộ nhớ trình duyệt.");
+        window.alert("Không thể đăng xuất vào lúc này. Vui lòng thử lại.");
         return;
       }
       menu.open = false;
@@ -142,3 +142,4 @@ function renderAccountActions(headerActions) {
 
   headerActions.append(accountActions);
 }
+

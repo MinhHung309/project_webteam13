@@ -21,10 +21,10 @@ function handleLogin(event) {
   const password = passwordInput.value;
   const errors = {};
 
-  if (!email) errors.loginEmail = "Vui lòng nhập email.";
-  else if (!emailPattern.test(email)) errors.loginEmail = "Email chưa đúng định dạng.";
-  else if (!getDemoUserByEmail(email)) errors.loginEmail = "Không tìm thấy hồ sơ demo với email này.";
-  if (!password.trim()) errors.loginPassword = "Vui lòng nhập mật khẩu demo.";
+  if (!email) errors.loginEmail = "Vui lòng nhập địa chỉ email.";
+  else if (!emailPattern.test(email)) errors.loginEmail = "Email chưa đúng định dạng (ví dụ: sinhvien@lhu.edu.vn).";
+  else if (!getDemoUserByEmail(email)) errors.loginEmail = "Tài khoản với email này chưa tồn tại. Vui lòng đăng ký.";
+  if (!password.trim()) errors.loginPassword = "Vui lòng nhập mật khẩu.";
 
   clearErrors();
   const firstError = Object.keys(errors)[0];
@@ -44,9 +44,11 @@ function handleLogin(event) {
   button.textContent = "Đăng nhập";
 
   if (!success) {
-    setFeedback("Không thể bắt đầu phiên demo. Hãy kiểm tra quyền lưu trữ của trình duyệt rồi thử lại.", "error");
+    setFeedback("Đăng nhập không thành công. Vui lòng kiểm tra lại quyền lưu trữ của trình duyệt và thử lại.", "error");
     return;
   }
+
+  setFeedback("Đăng nhập thành công! Đang chuyển hướng…", "success");
 
   const next = new URLSearchParams(window.location.search).get("next");
   const destination = next ? new URL(next, window.location.href) : new URL("../index.html", window.location.href);
@@ -54,7 +56,9 @@ function handleLogin(event) {
     window.location.assign("../index.html");
     return;
   }
-  window.location.assign(destination.href);
+  window.setTimeout(() => {
+    window.location.assign(destination.href);
+  }, 400);
 }
 
 function setupPasswordToggle() {

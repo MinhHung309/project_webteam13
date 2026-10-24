@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Quản lý hồ sơ người dùng demo LHU E-Shop.">
-  <title>Tài khoản của tôi | LHU E-Commerce</title>
+  <meta name="description" content="Quản lý thông tin tài khoản cá nhân tại LHU E-Shop.">
+  <title>Thông tin tài khoản | LHU E-Commerce</title>
   <link rel="stylesheet" href="../css/style.css">
   <link rel="stylesheet" href="../css/account.css">
 </head>
@@ -28,12 +28,14 @@
 
   <main class="main-content account-page account-profile-page">
     <section class="account-card account-profile-card" aria-labelledby="profileTitle">
-      <p class="account-eyebrow">HỒ SƠ LƯU TRÊN TRÌNH DUYỆT</p>
+      <p class="account-eyebrow">LHU E-SHOP · THÀNH VIÊN</p>
       <div class="profile-heading">
         <div class="profile-avatar" id="profileAvatar" aria-hidden="true">L</div>
-        <div><h1 id="profileTitle">Tài khoản của tôi</h1><p class="account-intro">Chỉnh sửa thông tin hồ sơ demo của bạn.</p></div>
+        <div>
+          <h1 id="profileTitle">Thông tin tài khoản</h1>
+          <p class="account-intro">Xem và cập nhật thông tin cá nhân của bạn tại LHU E-Shop.</p>
+        </div>
       </div>
-      <p class="account-notice" role="note">Dữ liệu chỉ phục vụ trình diễn trên trình duyệt hiện tại; không nhập thông tin cá nhân thật.</p>
       <p class="account-feedback" id="profileFeedback" role="status" aria-live="polite" hidden></p>
       <form id="profileForm" class="account-form" novalidate>
         <div class="account-field">
@@ -48,15 +50,15 @@
         </div>
         <div class="account-field">
           <label for="profilePhone">Số điện thoại <span>(không bắt buộc)</span></label>
-          <input id="profilePhone" name="phone" type="tel" autocomplete="tel" disabled aria-describedby="profilePhoneError">
+          <input id="profilePhone" name="phone" type="tel" autocomplete="tel" placeholder="ví dụ: 0912345678" disabled aria-describedby="profilePhoneError">
           <small class="account-field-error" id="profilePhoneError"></small>
         </div>
         <div class="account-field">
-          <label for="profileAddress">Địa chỉ giao hàng demo <span>(không bắt buộc)</span></label>
-          <textarea id="profileAddress" name="address" rows="3" maxlength="240" autocomplete="street-address" disabled></textarea>
+          <label for="profileAddress">Địa chỉ nhận hàng <span>(không bắt buộc)</span></label>
+          <textarea id="profileAddress" name="address" rows="3" maxlength="240" autocomplete="street-address" placeholder="Ví dụ: Ký túc xá Cơ sở 2, Đại học Lạc Hồng, Biên Hòa" disabled></textarea>
           <small class="account-field-error" id="profileAddressError"></small>
         </div>
-        <p class="profile-created">Ngày tạo hồ sơ: <time id="profileCreatedAt"></time></p>
+        <p class="profile-created">Ngày tham gia: <time id="profileCreatedAt"></time></p>
         <div class="profile-actions">
           <button class="btn btn-outline" id="editProfileButton" type="button">Chỉnh sửa thông tin</button>
           <button class="btn btn-primary" id="saveProfileButton" type="submit" hidden>Lưu thay đổi</button>
@@ -67,7 +69,7 @@
     </section>
   </main>
 
-  <footer class="site-footer account-footer"><div class="container"><p>Đây là hồ sơ mô phỏng cục bộ, không phải tài khoản thương mại điện tử thực tế.</p></div></footer>
+  <footer class="site-footer account-footer"><div class="container"><p>© 2026 LHU E-Shop. Nền tảng thương mại điện tử dành cho sinh viên Đại học Lạc Hồng.</p></div></footer>
   <script type="module" src="../js/pages/profile.js"></script>
 </body>
 </html>

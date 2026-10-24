@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Module Xử Lý Đánh Giá & Phản Hồi Khách Hàng (Customer Reviews Module)
  * Thuộc Phân hệ 2 - Dự án LHU E-Commerce Hub
  * 
@@ -113,7 +113,7 @@ export function addProductReview(reviewData) {
     const currentUser = getCurrentUser();
 
     if (!currentUser) {
-      return { success: false, message: "Vui lòng đăng nhập bằng hồ sơ demo trước khi gửi đánh giá." };
+      return { success: false, message: "Vui lòng đăng nhập để gửi đánh giá." };
     }
 
     // 1. Kiểm tra tính hợp lệ của dữ liệu đầu vào
@@ -214,3 +214,4 @@ function updateProductRatingCache(productId, averageRating, reviewCount) {
     setStorageItem(STORAGE_KEYS.PRODUCTS, products);
   }
 }
+

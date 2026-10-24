@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Đăng nhập phiên người dùng demo LHU E-Shop.">
+  <meta name="description" content="Đăng nhập tài khoản LHU E-Shop.">
   <title>Đăng nhập | LHU E-Commerce</title>
   <link rel="stylesheet" href="../css/style.css">
   <link rel="stylesheet" href="../css/account.css">
@@ -28,36 +28,35 @@
 
   <main class="main-content account-page">
     <section class="account-card" aria-labelledby="loginTitle">
-      <p class="account-eyebrow">LHU E-SHOP · TÀI KHOẢN DEMO</p>
-      <h1 id="loginTitle">Đăng nhập demo</h1>
-      <p class="account-intro">Tiếp tục trải nghiệm mua sắm bằng hồ sơ đã tạo trên trình duyệt này.</p>
-      <p class="account-notice" role="note">Đây không phải xác thực danh tính thật. Mật khẩu chỉ được kiểm tra là đã nhập, không được lưu hoặc so sánh.</p>
+      <p class="account-eyebrow">LHU E-SHOP · TÀI KHOẢN</p>
+      <h1 id="loginTitle">Đăng nhập</h1>
+      <p class="account-intro">Chào mừng bạn quay trở lại! Đăng nhập để tiếp tục mua sắm và nhận ưu đãi sinh viên.</p>
       <p class="account-feedback" id="loginFeedback" role="status" aria-live="polite" hidden></p>
       <form id="loginForm" class="account-form" novalidate>
         <div class="account-field">
           <label for="loginEmail">Email</label>
-          <input id="loginEmail" name="email" type="email" autocomplete="email" required aria-describedby="loginEmailError">
+          <input id="loginEmail" name="email" type="email" autocomplete="email" placeholder="Nhập địa chỉ email của bạn" required aria-describedby="loginEmailError">
           <small class="account-field-error" id="loginEmailError"></small>
         </div>
         <div class="account-field">
-          <label for="loginPassword">Mật khẩu <span>(chỉ kiểm tra đã nhập)</span></label>
+          <label for="loginPassword">Mật khẩu</label>
           <div class="account-password">
-            <input id="loginPassword" name="password" type="password" autocomplete="current-password" required aria-describedby="loginPasswordError">
+            <input id="loginPassword" name="password" type="password" autocomplete="current-password" placeholder="Nhập mật khẩu" required aria-describedby="loginPasswordError">
             <button type="button" class="password-toggle" data-password-target="loginPassword" aria-label="Hiện mật khẩu">Hiện</button>
           </div>
           <small class="account-field-error" id="loginPasswordError"></small>
         </div>
         <label class="account-checkbox">
           <input id="rememberLogin" name="remember" type="checkbox">
-          <span>Ghi nhớ phiên demo trên trình duyệt này</span>
+          <span>Ghi nhớ đăng nhập trên thiết bị này</span>
         </label>
         <button class="btn btn-primary account-submit" id="loginSubmit" type="submit">Đăng nhập</button>
       </form>
-      <p class="account-switch">Chưa có tài khoản? <a href="./register.html">Đăng ký</a></p>
+      <p class="account-switch">Chưa có tài khoản? <a href="./register.html">Đăng ký ngay</a></p>
     </section>
   </main>
 
-  <footer class="site-footer account-footer"><div class="container"><p>Không có chức năng gửi email đặt lại mật khẩu trong bản demo này.</p></div></footer>
+  <footer class="site-footer account-footer"><div class="container"><p>© 2026 LHU E-Shop. Nền tảng thương mại điện tử dành cho sinh viên Đại học Lạc Hồng.</p></div></footer>
   <script type="module" src="../js/pages/login.js"></script>
 </body>
 </html>
