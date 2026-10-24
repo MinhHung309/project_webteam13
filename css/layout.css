@@ -14,24 +14,27 @@
 .header-container {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   height: var(--header-height);
-  gap: var(--spacing-md);
+  gap: var(--spacing-sm);
 }
 
 .brand-logo {
   display: inline-flex;
   align-items: center;
-  gap: 0.65rem;
+  flex: 0 0 auto;
+  gap: 0.5rem;
   font-size: var(--font-size-xl);
   font-weight: var(--font-weight-extrabold);
   color: var(--deep-navy);
   letter-spacing: -0.02em;
+  white-space: nowrap;
 }
 
 .brand-logo .logo-icon {
   background: linear-gradient(135deg, var(--primary) 0%, var(--deep-blue) 100%);
   color: var(--white);
+  flex: 0 0 40px;
   width: 40px;
   height: 40px;
   border-radius: var(--border-radius-md);
@@ -46,22 +49,33 @@
 .main-nav {
   display: flex;
   align-items: center;
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 .nav-list {
   display: flex;
   align-items: center;
-  gap: var(--spacing-md);
+  justify-content: center;
+  gap: 0.25rem;
+  min-width: max-content;
+  width: 100%;
+}
+
+.nav-list > li {
+  flex: 0 0 auto;
 }
 
 .nav-link {
+  display: block;
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
   color: var(--gray-600);
-  padding: 0.5rem 0.75rem;
+  padding: 0.5rem 0.45rem;
   border-radius: var(--border-radius-md);
   position: relative;
   transition: all var(--transition-fast);
+  white-space: nowrap;
 }
 
 .nav-link:hover {
@@ -78,17 +92,20 @@
 .header-actions {
   display: flex;
   align-items: center;
-  gap: var(--spacing-sm);
+  flex: 0 0 auto;
+  gap: 0.35rem;
+  white-space: nowrap;
 }
 
 .action-link {
   display: inline-flex;
   align-items: center;
-  gap: 0.45rem;
+  flex: 0 0 auto;
+  gap: 0.35rem;
   color: var(--text-main);
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-semibold);
-  padding: 0.5rem 0.85rem;
+  padding: 0.45rem 0.55rem;
   border-radius: var(--border-radius-md);
   border: 1px solid var(--gray-200);
   background-color: var(--white);
@@ -99,6 +116,129 @@
   background-color: var(--primary-light);
   border-color: rgba(13, 93, 184, 0.25);
   color: var(--primary);
+}
+
+.account-actions {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+  gap: 0.25rem;
+}
+
+.account-auth-link {
+  min-height: 40px;
+  white-space: nowrap;
+  padding-inline: 0.55rem;
+}
+
+.account-register-link {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: var(--white);
+}
+
+.account-register-link:hover {
+  background: var(--primary-hover);
+  border-color: var(--primary-hover);
+  color: var(--white);
+}
+
+.account-menu {
+  position: relative;
+}
+
+.account-menu summary {
+  align-items: center;
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--border-radius-md);
+  color: var(--deep-navy);
+  cursor: pointer;
+  display: flex;
+  gap: var(--spacing-sm);
+  list-style: none;
+  min-height: 40px;
+  padding: 0.35rem 0.65rem;
+}
+
+.account-menu summary::-webkit-details-marker {
+  display: none;
+}
+
+.account-menu summary::after {
+  content: "▾";
+  color: var(--gray-600);
+  font-size: var(--font-size-xs);
+}
+
+.account-menu summary:focus-visible,
+.account-menu-panel a:focus-visible,
+.account-logout:focus-visible {
+  outline: 3px solid rgba(13, 93, 184, 0.35);
+  outline-offset: 2px;
+}
+
+.account-menu-avatar {
+  align-items: center;
+  background: var(--primary-light);
+  border-radius: 50%;
+  color: var(--primary);
+  display: inline-flex;
+  flex: 0 0 28px;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  height: 28px;
+  justify-content: center;
+}
+
+.account-menu-name {
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.account-menu-panel {
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-lg);
+  display: grid;
+  gap: 0.15rem;
+  min-width: 205px;
+  padding: var(--spacing-xs);
+  position: absolute;
+  right: 0;
+  top: calc(100% + 0.4rem);
+  z-index: 120;
+}
+
+.account-menu:not([open]) .account-menu-panel {
+  display: none;
+}
+
+.account-menu-panel a,
+.account-logout {
+  border-radius: var(--border-radius-sm);
+  color: var(--text-main);
+  display: block;
+  font-size: var(--font-size-sm);
+  padding: 0.55rem 0.65rem;
+  text-align: left;
+}
+
+.account-menu-panel a:hover,
+.account-logout:hover {
+  background: var(--primary-light);
+  color: var(--primary);
+}
+
+.account-logout {
+  border-top: 1px solid var(--gray-200);
+  color: var(--danger);
+  cursor: pointer;
+  margin-top: var(--spacing-xs);
+  width: 100%;
 }
 
 .cart-counter {
@@ -280,9 +420,10 @@
 /* ==========================================================================
    Responsive Header & Footer Breakpoints
    ========================================================================== */
-@media (max-width: 900px) {
+@media (max-width: 1120px) {
   .menu-toggle {
     display: flex;
+    flex: 0 0 40px;
   }
 
   .main-nav {
@@ -297,6 +438,7 @@
     flex-direction: column;
     border-top: 1px solid var(--gray-200);
     border-bottom: 2px solid var(--primary);
+    z-index: 110;
   }
 
   .main-nav.is-open {
@@ -306,8 +448,13 @@
   .nav-list {
     flex-direction: column;
     width: 100%;
+    min-width: 0;
     align-items: stretch;
     gap: var(--spacing-xs);
+  }
+
+  .nav-list > li {
+    width: 100%;
   }
 
   .nav-link {
@@ -315,6 +462,9 @@
     font-size: var(--font-size-base);
   }
 
+}
+
+@media (max-width: 900px) {
   .footer-grid {
     grid-template-columns: 1fr 1fr;
     gap: var(--spacing-lg);
@@ -324,6 +474,11 @@
 @media (max-width: 600px) {
   .header-container {
     height: 62px;
+    gap: 0.35rem;
+  }
+
+  .main-nav {
+    top: 62px;
   }
 
   .brand-logo {
@@ -340,6 +495,26 @@
     display: none; /* Thu gọn chữ "Giỏ hàng" trên mobile nhỏ, giữ lại icon + badge số lượng */
   }
 
+  .account-auth-link {
+    font-size: var(--font-size-xs);
+    min-height: 36px;
+    padding-inline: 0.45rem;
+  }
+
+  .action-link {
+    padding-inline: 0.45rem;
+  }
+
+  .account-menu summary {
+    gap: 0.25rem;
+    min-height: 36px;
+    padding: 0.25rem 0.4rem;
+  }
+
+  .account-menu-name {
+    max-width: 64px;
+  }
+
   .footer-grid {
     grid-template-columns: 1fr;
     gap: var(--spacing-xl);
@@ -349,5 +524,20 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 0.5rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .header-container {
+    gap: 0.3rem;
+  }
+
+  .header-actions,
+  .account-actions {
+    gap: 0.2rem;
+  }
+
+  .account-auth-link {
+    padding-inline: 0.35rem;
   }
 }

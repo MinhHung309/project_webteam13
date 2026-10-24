@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Tạo hồ sơ người dùng demo LHU E-Shop.">
+  <title>Đăng ký tài khoản | LHU E-Commerce</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/account.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-container">
+      <a href="../index.html" class="brand-logo"><span class="logo-icon">LHU</span><span>E-Shop</span></a>
+      <button type="button" class="menu-toggle" id="menuToggle" aria-label="Mở menu điều hướng" aria-expanded="false">☰</button>
+      <nav class="main-nav" id="mainNav" aria-label="Điều hướng chính">
+        <ul class="nav-list">
+          <li><a href="../index.html" class="nav-link">Trang chủ</a></li>
+          <li><a href="./products.html" class="nav-link">Sản phẩm</a></li>
+          <li><a href="./vouchers.html" class="nav-link">Voucher</a></li>
+          <li><a href="./order-tracking.html" class="nav-link">Theo dõi đơn</a></li>
+          <li><a href="./auction.html" class="nav-link">Đấu giá</a></li>
+        </ul>
+      </nav>
+      <div class="header-actions"><a href="./cart.html" class="action-link"><span aria-hidden="true">🛒</span><span>Giỏ hàng</span><span class="cart-counter" id="cartCount">0</span></a></div>
+    </div>
+  </header>
+
+  <main class="main-content account-page">
+    <section class="account-card" aria-labelledby="registerTitle">
+      <p class="account-eyebrow">LHU E-SHOP · TÀI KHOẢN DEMO</p>
+      <h1 id="registerTitle">Tạo hồ sơ demo</h1>
+      <p class="account-intro">Tạo hồ sơ trình duyệt để trải nghiệm các tính năng dành cho thành viên.</p>
+      <p class="account-notice" role="note">Đây chỉ là mô phỏng phía trình duyệt. Mật khẩu không được lưu hay xác minh; không dùng thông tin cá nhân thật.</p>
+      <p class="account-feedback" id="registerFeedback" role="status" aria-live="polite" hidden></p>
+      <form id="registerForm" class="account-form" novalidate>
+        <div class="account-field">
+          <label for="registerFullName">Họ và tên</label>
+          <input id="registerFullName" name="fullName" type="text" autocomplete="name" maxlength="80" required aria-describedby="registerFullNameError">
+          <small class="account-field-error" id="registerFullNameError"></small>
+        </div>
+        <div class="account-field">
+          <label for="registerEmail">Email</label>
+          <input id="registerEmail" name="email" type="email" autocomplete="email" maxlength="254" required aria-describedby="registerEmailError">
+          <small class="account-field-error" id="registerEmailError"></small>
+        </div>
+        <div class="account-field">
+          <label for="registerPassword">Mật khẩu <span>(chỉ dùng trong biểu mẫu demo)</span></label>
+          <div class="account-password">
+            <input id="registerPassword" name="password" type="password" autocomplete="new-password" minlength="8" required aria-describedby="registerPasswordError">
+            <button type="button" class="password-toggle" data-password-target="registerPassword" aria-label="Hiện mật khẩu">Hiện</button>
+          </div>
+          <small class="account-field-error" id="registerPasswordError"></small>
+        </div>
+        <div class="account-field">
+          <label for="registerConfirmPassword">Xác nhận mật khẩu</label>
+          <div class="account-password">
+            <input id="registerConfirmPassword" name="confirmPassword" type="password" autocomplete="new-password" required aria-describedby="registerConfirmPasswordError">
+            <button type="button" class="password-toggle" data-password-target="registerConfirmPassword" aria-label="Hiện mật khẩu xác nhận">Hiện</button>
+          </div>
+          <small class="account-field-error" id="registerConfirmPasswordError"></small>
+        </div>
+        <label class="account-checkbox">
+          <input id="registerTerms" name="terms" type="checkbox" required aria-describedby="registerTermsError">
+          <span>Tôi đồng ý sử dụng hồ sơ giả lập và hiểu đây không phải hệ thống xác thực thực tế.</span>
+        </label>
+        <small class="account-field-error" id="registerTermsError"></small>
+        <button class="btn btn-primary account-submit" id="registerSubmit" type="submit">Đăng ký</button>
+      </form>
+      <p class="account-switch">Đã có tài khoản? <a href="./login.html">Đăng nhập</a></p>
+    </section>
+  </main>
+
+  <footer class="site-footer account-footer"><div class="container"><p>Hồ sơ và dữ liệu demo chỉ được lưu trên trình duyệt hiện tại.</p></div></footer>
+  <script type="module" src="../js/pages/register.js"></script>
+</body>
+</html>

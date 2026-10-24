@@ -10,11 +10,13 @@ import {
   STORAGE_KEYS
 } from "../utils/storage.js";
 import { VOUCHER_STORAGE_KEYS } from "../modules/vouchers.js";
+import { getCurrentUser } from "../modules/auth.js";
 
 let submitting = false;
 
 document.addEventListener("DOMContentLoaded", () => {
   initNavigation();
+  prefillCurrentUser();
   document.getElementById("checkoutForm")?.addEventListener("submit", submitOrder);
   document.getElementById("checkoutForm")?.addEventListener("input", clearFieldError);
   window.addEventListener(CART_UPDATED_EVENT, renderCheckoutSummary);
@@ -23,6 +25,17 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   renderCheckoutSummary();
 });
+
+function prefillCurrentUser() {
+  const user = getCurrentUser();
+  if (!user) return;
+  const form = document.getElementById("checkoutForm");
+  if (!form) return;
+  if (!form.elements.fullName.value) form.elements.fullName.value = user.fullName;
+  if (!form.elements.email.value) form.elements.email.value = user.email;
+  if (!form.elements.phone.value) form.elements.phone.value = user.phone || "";
+  if (!form.elements.address.value && user.address) form.elements.address.value = user.address;
+}
 
 function renderCheckoutSummary() {
   const cart = getCart();
@@ -126,9 +139,11 @@ function submitOrder(event) {
     return;
   }
   const now = new Date().toISOString();
+  const currentUser = getCurrentUser();
   const order = {
     id: orderCode,
     orderCode,
+    userId: currentUser?.id || null,
     customerName: customer.fullName,
     customer: {
       fullName: customer.fullName,

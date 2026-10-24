@@ -1,5 +1,6 @@
 import { initNavigation } from "../modules/nav.js";
 import { AUCTION_STORAGE_KEY, getMyAuctionEntries, getAuctionStatus } from "../modules/auction.js";
+import { AUTH_UPDATED_EVENT, getCurrentUser } from "../modules/auth.js";
 import { formatCurrency } from "../utils/storage.js";
 
 const grid = document.getElementById("myAuctionGrid");
@@ -11,6 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initNavigation();
   renderMyAuctions();
   window.addEventListener("storage", handleStorage);
+  window.addEventListener(AUTH_UPDATED_EVENT, renderMyAuctions);
   window.addEventListener("lhu:auction-updated", renderMyAuctions);
   window.addEventListener("pagehide", cleanup, { once: true });
 });
@@ -24,7 +26,9 @@ function element(tag, className, text) {
 
 function renderMyAuctions() {
   const user = document.getElementById("auctionDemoUser");
-  user.textContent = "Các phiên bạn đã tham gia bằng định danh ổn định trên trình duyệt này; không có đăng nhập thật.";
+  user.textContent = getCurrentUser()
+    ? "Danh sách lượt đặt giá gắn với hồ sơ demo đang đăng nhập."
+    : "Đang hiển thị lịch sử đấu giá cũ theo định danh demo mặc định. Đăng nhập để lưu lượt đặt giá theo hồ sơ riêng.";
   const entries = getMyAuctionEntries();
   grid.replaceChildren(...entries.map(({ auction, highestOwnBid, leading, status, result }) => {
     const card = element("article", "auction-card auction-my-card");

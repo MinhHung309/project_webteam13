@@ -1,9 +1,17 @@
 import { DEMO_AUCTIONS } from "../data/auction-demo.js";
 import { formatCurrency, getStorageItem, setStorageItem } from "../utils/storage.js";
+import { getCurrentUser } from "./auth.js";
 
 export const AUCTION_STORAGE_KEY = "lhu_auction_sessions_v1";
 export const AUCTION_UPDATED_EVENT = "lhu:auction-updated";
 export const DEMO_AUCTION_USER = Object.freeze({ id: "lhu-demo-user", name: "Người dùng demo" });
+
+export function getAuctionDemoUser() {
+  const user = getCurrentUser();
+  return user
+    ? { id: user.id, name: user.fullName }
+    : DEMO_AUCTION_USER;
+}
 
 export function getAuctionStatus(auction, now = Date.now()) {
   const start = Date.parse(auction.startTime);
@@ -138,6 +146,11 @@ export function getAuctionById(id) {
 export function placeAuctionBid(auctionId, inputValue) {
   const store = loadAuctionStore();
   const auction = store.auctions.find(item => item.id === auctionId);
+  const currentUser = getCurrentUser();
+  if (!currentUser) {
+    return { success: false, message: "Vui lòng đăng nhập bằng hồ sơ demo trước khi đặt giá." };
+  }
+  const bidder = { id: currentUser.id, name: currentUser.fullName };
   if (!auction) return { success: false, message: "Không tìm thấy phiên đấu giá." };
 
   const now = Date.now();
@@ -145,7 +158,7 @@ export function placeAuctionBid(auctionId, inputValue) {
   if (status === "upcoming") return { success: false, message: "Phiên đấu giá chưa bắt đầu, bạn chưa thể đặt giá." };
   if (status === "ended") return { success: false, message: "Phiên đấu giá đã kết thúc, không thể đặt giá." };
 
-  if (!DEMO_AUCTION_USER.id || !DEMO_AUCTION_USER.name) {
+  if (!bidder.id || !bidder.name) {
     return { success: false, message: "Chưa xác định người dùng demo để ghi nhận lượt đặt giá." };
   }
 
@@ -157,7 +170,7 @@ export function placeAuctionBid(auctionId, inputValue) {
   if (!Number.isSafeInteger(amount) || !Number.isFinite(amount) || amount <= 0) {
     return { success: false, message: "Giá đặt phải là số nguyên dương hữu hạn và lớn hơn 0." };
   }
-  if (auction.highestBidder?.id === DEMO_AUCTION_USER.id) {
+  if (auction.highestBidder?.id === bidder.id) {
     return { success: false, message: "Bạn đang dẫn đầu phiên này nên không thể tự nâng giá." };
   }
   if (amount <= auction.currentPrice) {
@@ -172,9 +185,9 @@ export function placeAuctionBid(auctionId, inputValue) {
   }
 
   const bid = {
-    id: `bid-${DEMO_AUCTION_USER.id}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-    bidderId: DEMO_AUCTION_USER.id,
-    bidderName: DEMO_AUCTION_USER.name,
+    id: `bid-${bidder.id}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+    bidderId: bidder.id,
+    bidderName: bidder.name,
     amount,
     timestamp: new Date().toISOString()
   };
@@ -195,12 +208,13 @@ export function placeAuctionBid(auctionId, inputValue) {
 
 export function getMyAuctionEntries() {
   const auctions = getAuctions();
+  const user = getAuctionDemoUser();
   return auctions.map(auction => {
-    const ownBids = auction.bidHistory.filter(bid => bid.bidderId === DEMO_AUCTION_USER.id);
+    const ownBids = auction.bidHistory.filter(bid => bid.bidderId === user.id);
     if (!ownBids.length) return null;
     const highestOwnBid = ownBids.reduce((highest, bid) => Math.max(highest, bid.amount), 0);
     const status = getAuctionStatus(auction);
-    const leading = auction.highestBidder?.id === DEMO_AUCTION_USER.id;
+    const leading = auction.highestBidder?.id === user.id;
     let result;
     if (status === "ended") result = leading ? "Đã thắng" : "Đã thua";
     else result = leading ? "Bạn đang dẫn đầu" : "Đã bị vượt giá";

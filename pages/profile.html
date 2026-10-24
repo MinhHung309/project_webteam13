@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Quản lý hồ sơ người dùng demo LHU E-Shop.">
+  <title>Tài khoản của tôi | LHU E-Commerce</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/account.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-container">
+      <a href="../index.html" class="brand-logo"><span class="logo-icon">LHU</span><span>E-Shop</span></a>
+      <button type="button" class="menu-toggle" id="menuToggle" aria-label="Mở menu điều hướng" aria-expanded="false">☰</button>
+      <nav class="main-nav" id="mainNav" aria-label="Điều hướng chính">
+        <ul class="nav-list">
+          <li><a href="../index.html" class="nav-link">Trang chủ</a></li>
+          <li><a href="./products.html" class="nav-link">Sản phẩm</a></li>
+          <li><a href="./vouchers.html" class="nav-link">Voucher</a></li>
+          <li><a href="./order-tracking.html" class="nav-link">Theo dõi đơn</a></li>
+          <li><a href="./auction.html" class="nav-link">Đấu giá</a></li>
+        </ul>
+      </nav>
+      <div class="header-actions"><a href="./cart.html" class="action-link"><span aria-hidden="true">🛒</span><span>Giỏ hàng</span><span class="cart-counter" id="cartCount">0</span></a></div>
+    </div>
+  </header>
+
+  <main class="main-content account-page account-profile-page">
+    <section class="account-card account-profile-card" aria-labelledby="profileTitle">
+      <p class="account-eyebrow">HỒ SƠ LƯU TRÊN TRÌNH DUYỆT</p>
+      <div class="profile-heading">
+        <div class="profile-avatar" id="profileAvatar" aria-hidden="true">L</div>
+        <div><h1 id="profileTitle">Tài khoản của tôi</h1><p class="account-intro">Chỉnh sửa thông tin hồ sơ demo của bạn.</p></div>
+      </div>
+      <p class="account-notice" role="note">Dữ liệu chỉ phục vụ trình diễn trên trình duyệt hiện tại; không nhập thông tin cá nhân thật.</p>
+      <p class="account-feedback" id="profileFeedback" role="status" aria-live="polite" hidden></p>
+      <form id="profileForm" class="account-form" novalidate>
+        <div class="account-field">
+          <label for="profileFullName">Họ và tên</label>
+          <input id="profileFullName" name="fullName" autocomplete="name" maxlength="80" required disabled aria-describedby="profileFullNameError">
+          <small class="account-field-error" id="profileFullNameError"></small>
+        </div>
+        <div class="account-field">
+          <label for="profileEmail">Email</label>
+          <input id="profileEmail" name="email" type="email" autocomplete="email" maxlength="254" required disabled aria-describedby="profileEmailError">
+          <small class="account-field-error" id="profileEmailError"></small>
+        </div>
+        <div class="account-field">
+          <label for="profilePhone">Số điện thoại <span>(không bắt buộc)</span></label>
+          <input id="profilePhone" name="phone" type="tel" autocomplete="tel" disabled aria-describedby="profilePhoneError">
+          <small class="account-field-error" id="profilePhoneError"></small>
+        </div>
+        <div class="account-field">
+          <label for="profileAddress">Địa chỉ giao hàng demo <span>(không bắt buộc)</span></label>
+          <textarea id="profileAddress" name="address" rows="3" maxlength="240" autocomplete="street-address" disabled></textarea>
+          <small class="account-field-error" id="profileAddressError"></small>
+        </div>
+        <p class="profile-created">Ngày tạo hồ sơ: <time id="profileCreatedAt"></time></p>
+        <div class="profile-actions">
+          <button class="btn btn-outline" id="editProfileButton" type="button">Chỉnh sửa thông tin</button>
+          <button class="btn btn-primary" id="saveProfileButton" type="submit" hidden>Lưu thay đổi</button>
+          <button class="btn btn-outline" id="cancelProfileButton" type="button" hidden>Hủy</button>
+          <button class="btn btn-danger" id="profileLogoutButton" type="button">Đăng xuất</button>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <footer class="site-footer account-footer"><div class="container"><p>Đây là hồ sơ mô phỏng cục bộ, không phải tài khoản thương mại điện tử thực tế.</p></div></footer>
+  <script type="module" src="../js/pages/profile.js"></script>
+</body>
+</html>

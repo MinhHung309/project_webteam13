@@ -17,6 +17,7 @@ import {
   setStorageItem, 
   initializeStorageItem 
 } from "../utils/storage.js";
+import { getCurrentUser } from "./auth.js";
 
 /**
  * Đảm bảo dữ liệu đánh giá và sản phẩm đã tồn tại trong LocalStorage
@@ -109,6 +110,11 @@ export function calculateReviewStats(productId) {
 export function addProductReview(reviewData) {
   try {
     const { productId, userName, userRole, rating, comment } = reviewData;
+    const currentUser = getCurrentUser();
+
+    if (!currentUser) {
+      return { success: false, message: "Vui lòng đăng nhập bằng hồ sơ demo trước khi gửi đánh giá." };
+    }
 
     // 1. Kiểm tra tính hợp lệ của dữ liệu đầu vào
     if (!productId || typeof productId !== "string") {
@@ -120,7 +126,7 @@ export function addProductReview(reviewData) {
       return { success: false, message: "Vui lòng chọn mức đánh giá từ 1 đến 5 sao." };
     }
 
-    const cleanUserName = (userName || "").trim();
+    const cleanUserName = (currentUser?.fullName || userName || "").trim();
     if (cleanUserName.length < 2) {
       return { success: false, message: "Họ và tên người đánh giá phải có ít nhất 2 ký tự." };
     }
@@ -137,6 +143,7 @@ export function addProductReview(reviewData) {
     const newReview = {
       id: reviewId,
       productId: productId,
+      userId: currentUser.id,
       userName: cleanUserName,
       userRole: (userRole || "Sinh viên LHU").trim(),
       rating: numericRating,

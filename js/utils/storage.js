@@ -10,7 +10,11 @@ const STORAGE_KEYS = {
   VOUCHERS: "lhu_vouchers",
   ORDERS: "lhu_orders",
   AUCTIONS: "lhu_auctions",
-  USER_PREFS: "lhu_user_prefs"
+  USER_PREFS: "lhu_user_prefs",
+  DEMO_USERS: "lhu_demo_users",
+  DEMO_SESSION: "lhu_demo_session",
+  DEMO_REMEMBERED_SESSION: "lhu_demo_remembered_session",
+  DEMO_VOUCHERS_BY_USER: "lhu_demo_vouchers_by_user"
 };
 
 /**
