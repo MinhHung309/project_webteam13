@@ -126,7 +126,316 @@
 - `docs/data_architecture.md`: Bản đặc tả chi tiết toàn bộ Schema, sơ đồ Mermaid giao tiếp giữa các module, danh sách hàm giao tiếp và 6 test cases chuẩn.
 
 ---
+## PROMPT 01 — PHÁT TRIỂN PHÂN HỆ ĐÁNH GIÁ & PHẢN HỒI
 
+Bạn là Senior Frontend Developer, hỗ trợ tôi phát triển dự án học phần Thiết kế Web LHU E-Commerce Hub.
+
+Bối cảnh dự án
+
+Repository dùng chung của nhóm: project_webteam13.
+
+Tôi là thành viên B, chịu trách nhiệm phát triển các phân hệ chức năng.
+
+Công nghệ bắt buộc: HTML5, CSS3, JavaScript thuần và ES Modules.
+
+Dữ liệu demo sử dụng file dữ liệu tĩnh và localStorage; chưa có backend.
+
+Không dùng React hoặc tự ý thêm framework.
+
+Nhiệm vụ hiện tại
+
+Chỉ phát triển phân hệ Đánh giá & Phản hồi khách hàng.
+
+Trước khi code, kiểm tra cấu trúc thư mục, trang chi tiết sản phẩm, CSS dùng chung và module dữ liệu hiện tại.
+
+Tái sử dụng giao diện, quy ước đặt tên, cấu trúc dữ liệu và hàm lưu trữ đã có.
+
+Xây dựng giao diện chọn sao từ 1 đến 5, nhập bình luận và gửi đánh giá.
+
+Khi gửi đánh giá hợp lệ, cập nhật danh sách ngay trên trang mà không tải lại trang.
+
+Hiển thị số lượng đánh giá, điểm trung bình và biểu đồ thanh tỷ lệ đánh giá theo số sao.
+
+Lưu đánh giá demo vào localStorage, gắn với ID sản phẩm và xử lý trường hợp dữ liệu lưu bị lỗi.
+
+Tạo hoặc cập nhật trang lịch sử đánh giá nếu phù hợp với cấu trúc hiện tại.
+
+Đảm bảo responsive, hỗ trợ bàn phím, có nhãn biểu mẫu và thông báo lỗi rõ ràng.
+
+Không tạo đánh giá giả mạo dưới danh nghĩa người dùng thật. Dữ liệu mẫu phải được ghi rõ là dữ liệu demo.
+
+Không chỉnh sửa chức năng giỏ hàng, voucher, theo dõi đơn hàng hoặc đấu giá.
+
+Quy tắc làm việc
+
+Trước khi sửa, hãy báo cáo các file dự kiến tạo hoặc thay đổi.
+
+Giữ nguyên những thay đổi hiện có của nhóm.
+
+Không xóa hoặc viết lại file dùng chung nếu không cần thiết.
+
+Nếu chưa rõ cấu trúc dữ liệu hoặc cách điều hướng, hãy hỏi tôi thay vì tự đoán.
+
+Sau khi code, hãy kiểm tra lỗi JavaScript, đường dẫn, localStorage và các trường hợp nhập liệu không hợp lệ.
+
+Báo cáo các file đã sửa, cách kiểm thử, lỗi còn tồn tại và hướng dẫn chạy.
+
+Không tự commit, push hoặc merge Git.
+## PROMPT 02 — XÂY DỰNG MODULE VOUCHER & KHUYẾN MÃI
+
+Bạn là Senior Frontend Developer chuyên HTML5, CSS3, JavaScript ES6 và phát triển website thương mại điện tử.
+
+Tôi đang thực hiện đồ án môn Thiết kế Web tại Đại học Lạc Hồng, với repository project_webteam13.
+
+Công nghệ dự án:
+
+HTML5, CSS3, JavaScript thuần (ES Modules).
+
+Không sử dụng React, Vue, Angular hoặc backend.
+
+Dữ liệu mẫu được quản lý bằng JavaScript/JSON và localStorage.
+
+Website có các module: Smart Shopping Cart, Review & Feedback, Voucher & Khuyến mãi, Order Tracking, Online Auction.
+
+NHIỆM VỤ: Xây dựng module Discount/Voucher Hub — Voucher & Khuyến mãi và tích hợp vào cấu trúc website hiện có.
+
+BƯỚC 1 — PHÂN TÍCH DỰ ÁN TRƯỚC KHI CODE
+
+Kiểm tra toàn bộ cấu trúc thư mục hiện tại.
+
+Xác định các trang, CSS, JavaScript, dữ liệu sản phẩm và giỏ hàng đã có.
+
+Kiểm tra module Review & Feedback để tránh ghi đè hoặc làm hỏng chức năng.
+
+Xác định cách website điều hướng giữa các trang.
+
+Liệt kê các file dự kiến tạo mới hoặc chỉnh sửa trước khi triển khai.
+
+Không tự ý xóa, thay thế hoặc viết lại toàn bộ website.
+
+BƯỚC 2 — XÂY DỰNG TRANG VOUCHER HUB
+
+Tạo trang Voucher & Khuyến mãi phù hợp với cấu trúc dự án.
+
+Yêu cầu giao diện:
+
+Tiêu đề nổi bật: "Kho Voucher & Ưu Đãi".
+
+Banner khuyến mãi có hiệu ứng chuyển động bằng CSS.
+
+Danh sách voucher hiển thị dạng card/grid responsive.
+
+Mỗi voucher có:
+
+Mã giảm giá.
+
+Tên chương trình.
+
+Mức giảm.
+
+Điều kiện áp dụng.
+
+Ngày hết hạn.
+
+Trạng thái: Còn hạn, Đã hết hạn, Đã lưu.
+
+Nút "Lưu voucher" hoặc "Sao chép mã".
+
+Thiết kế viền voucher kiểu răng cưa/torn-edge bằng CSS hoặc pseudo-elements.
+
+Hiệu ứng hover mượt, phù hợp phong cách website.
+
+Responsive cho desktop, tablet và mobile.
+
+BƯỚC 3 — DỮ LIỆU VOUCHER
+
+Tạo dữ liệu voucher mẫu, tối thiểu gồm:
+
+LHU2026: giảm 10% tổng tiền hàng.
+
+WELCOME50: giảm 50.000đ cho đơn hàng từ 500.000đ.
+
+FREESHIP: miễn phí vận chuyển tối đa 30.000đ.
+
+SALE20: giảm 20%, tối đa 100.000đ, cho đơn hàng từ 300.000đ.
+
+Mỗi voucher phải có cấu trúc dữ liệu rõ ràng, ví dụ:
+
+code
+
+title
+
+description
+
+discountType
+
+discountValue
+
+maxDiscount
+
+minOrderValue
+
+expiryDate
+
+isActive
+
+Sử dụng ngày hết hạn hợp lý để các voucher demo có thể được thử nghiệm. Nếu cần minh họa voucher hết hạn, phải ghi rõ đó là dữ liệu demo.
+
+BƯỚC 4 — XỬ LÝ VOUCHER BẰNG JAVASCRIPT
+
+Triển khai các chức năng:
+
+Hiển thị danh sách voucher bằng JavaScript.
+
+Tìm kiếm voucher theo mã hoặc tên.
+
+Lọc voucher theo trạng thái.
+
+Lưu voucher vào ví cá nhân bằng localStorage.
+
+Không lưu trùng một voucher.
+
+Cho phép sao chép mã voucher.
+
+Hiển thị thông báo khi lưu hoặc sao chép thành công.
+
+Kiểm tra voucher còn hiệu lực và đủ điều kiện áp dụng.
+
+Hiển thị thông báo rõ ràng nếu mã sai, hết hạn hoặc chưa đủ giá trị đơn hàng.
+
+Không cần tải lại trang khi người dùng tương tác.
+
+Dữ liệu localStorage phải được xử lý an toàn khi rỗng, sai định dạng hoặc bị lỗi.
+
+BƯỚC 5 — TÍCH HỢP VỚI GIỎ HÀNG / CHECKOUT
+
+Nếu website đã có trang giỏ hàng hoặc thanh toán, hãy tích hợp ô nhập mã giảm giá.
+
+Yêu cầu bắt buộc: Mã LHU2026 giảm đúng 10% tổng tiền hàng đủ điều kiện.
+
+Ví dụ:
+
+Tạm tính sản phẩm: 1.000.000đ.
+
+Nhập LHU2026.
+
+Tiền giảm: 100.000đ.
+
+Tổng sau giảm (chưa tính phí khác): 900.000đ.
+
+Quy tắc tính toán:
+
+Tính giảm giá dựa trên subtotal sản phẩm, không dựa trên tổng đã cộng phí vận chuyển.
+
+Tính lại tiền giảm khi số lượng sản phẩm thay đổi.
+
+Không cho tổng thanh toán âm.
+
+Mỗi đơn hàng chỉ áp dụng một voucher tại một thời điểm.
+
+Tránh áp dụng giảm giá hai lần.
+
+Đối với FREESHIP, giảm phí vận chuyển thực tế, tối đa 30.000đ.
+
+Không thay đổi công thức thuế hiện tại nếu dự án đã có quy tắc thuế.
+
+Nếu giỏ hàng chưa được triển khai, hãy xây dựng hàm kiểm tra và tính voucher độc lập để nhóm có thể tích hợp sau; không tự tạo lại toàn bộ module giỏ hàng.
+
+BƯỚC 6 — TRANG VÍ VOUCHER CỦA TÔI
+
+Tạo khu vực hoặc trang "Voucher của tôi", phù hợp với cấu trúc website.
+
+Hiển thị:
+
+Voucher đã lưu.
+
+Voucher còn sử dụng được.
+
+Voucher đã hết hạn.
+
+Nút sao chép mã.
+
+Trạng thái voucher.
+
+Dữ liệu lưu trong localStorage với khóa có tiền tố riêng cho module voucher để không xung đột dữ liệu giỏ hàng và đánh giá.
+
+BƯỚC 7 — CHẤT LƯỢNG CODE VÀ GIAO DIỆN
+
+Code dễ đọc, chia hàm rõ ràng.
+
+Ưu tiên tái sử dụng CSS, header, footer và component có sẵn.
+
+Không dùng thư viện ngoài nếu không thực sự cần.
+
+Không dùng inline JavaScript.
+
+Hạn chế biến global.
+
+Kiểm tra dữ liệu người dùng nhập vào.
+
+Sử dụng textContent hoặc DOM API an toàn khi hiển thị dữ liệu động.
+
+Bảo đảm các nút hoạt động thực sự.
+
+Có thông báo lỗi/thành công thân thiện.
+
+Không có lỗi JavaScript trong Console.
+
+Bảo đảm khả năng sử dụng bằng bàn phím và nhãn form rõ ràng.
+
+BƯỚC 8 — KIỂM THỬ
+
+Kiểm tra tối thiểu các trường hợp:
+
+Nhập LHU2026 với subtotal 1.000.000đ → giảm 100.000đ.
+
+Nhập mã không tồn tại → thông báo lỗi.
+
+Nhập voucher hết hạn → không cho áp dụng.
+
+Đơn hàng chưa đạt mức tối thiểu → không cho áp dụng.
+
+Lưu voucher hai lần → không bị trùng.
+
+Tải lại trang → voucher đã lưu vẫn tồn tại.
+
+Thay đổi số lượng trong giỏ → tổng giảm được cập nhật.
+
+Xóa voucher đang áp dụng → tổng thanh toán trở lại bình thường.
+
+Kiểm tra giao diện trên mobile.
+
+Kiểm tra Review & Feedback và các trang hiện có vẫn hoạt động.
+
+BƯỚC 9 — BÁO CÁO KẾT QUẢ
+
+Sau khi hoàn thành, hãy cung cấp:
+
+Danh sách file đã tạo hoặc chỉnh sửa.
+
+Giải thích ngắn gọn cách hoạt động của module.
+
+Hướng dẫn mở trang Voucher và kiểm thử.
+
+Danh sách test case đã thực hiện và kết quả.
+
+Những phần cần nhóm trưởng tích hợp thêm (nếu có).
+
+Một đoạn tóm tắt quá trình dùng AI, lỗi phát sinh và cách sửa để tôi ghi vào prompt_log.md.
+
+QUY TẮC QUAN TRỌNG:
+
+Chỉ triển khai module Voucher & Khuyến mãi.
+
+Không tự ý sửa hoặc xóa module Review & Feedback, Auction, Order Tracking.
+
+Không ghi đè code của thành viên khác.
+
+Không tự động commit, push, merge hoặc chuyển nhánh Git.
+
+Nếu có xung đột với cấu trúc hiện tại, hãy hỏi trước khi chỉnh sửa.
+
+Không khẳng định đã kiểm thử nếu chưa thực sự chạy kiểm thử.
 ## Prompt 03 — Phân hệ Theo dõi đơn hàng
 **Ngày thực hiện**: 23/10/2026
 **Mục tiêu**: Hoàn thiện tra cứu đơn hàng và lịch sử mua hàng demo, dùng lại khóa lưu `lhu_orders` và giữ nguyên dữ liệu các phân hệ khác.
@@ -187,7 +496,401 @@
 - Giao diện hiện dùng ảnh demo từ Unsplash; có thể thay bằng tài sản nội bộ trước khi triển khai nếu cần hoạt động hoàn toàn offline.
 
 ---
+## PROMPT 05 — HOÀN THIỆN SMART SHOPPING CART & CHECKOUT
 
+Bạn là Senior Frontend Developer chuyên HTML5, CSS3, JavaScript ES6 và phát triển website thương mại điện tử.
+
+Tôi đang thực hiện đồ án môn Thiết kế Web tại Đại học Lạc Hồng.
+
+Repository: project_webteam13
+
+Công nghệ:
+
+HTML5, CSS3 responsive.
+
+JavaScript thuần ES Modules.
+
+Dữ liệu sản phẩm bằng JSON/JavaScript.
+
+localStorage để lưu giỏ hàng và đơn hàng.
+
+Không sử dụng React, Vue, Angular hoặc backend.
+
+TÌNH TRẠNG HIỆN TẠI:
+
+Trang "Giỏ Hàng Của Bạn" đang chỉ hiển thị thông báo:
+
+"Phân hệ giỏ hàng và đặt hàng tương tác thông qua LocalStorage đang được nhóm hoàn thiện logic ở bước kế tiếp."
+
+Và nhãn "Phân hệ Mua sắm & Giỏ hàng: Đang phát triển".
+
+Tôi muốn thay thế giao diện tạm này bằng hệ thống giỏ hàng và đặt hàng có thể sử dụng được.
+
+Website có các module:
+
+Smart Shopping Cart.
+
+Review & Feedback.
+
+Voucher & Khuyến mãi.
+
+Order Tracking.
+
+Online Auction.
+
+MỤC TIÊU: Hoàn thiện giỏ hàng, tính tiền, áp dụng voucher, checkout và tạo đơn hàng demo để người dùng có thể theo dõi đơn hàng sau khi đặt.
+
+BƯỚC 1 — KIỂM TRA CODE HIỆN CÓ
+
+Trước khi sửa code:
+
+Kiểm tra cấu trúc thư mục dự án.
+
+Xác định trang giỏ hàng đang hiển thị giao diện "Đang phát triển".
+
+Xác định trang Home, Shop và Product Detail.
+
+Kiểm tra nguồn dữ liệu sản phẩm hiện có.
+
+Kiểm tra chức năng nút "Thêm vào giỏ hàng" nếu đã tồn tại.
+
+Kiểm tra module Voucher và hàm tính giảm giá.
+
+Kiểm tra module Order Tracking và cấu trúc dữ liệu đơn hàng.
+
+Kiểm tra cách dự án đang sử dụng localStorage.
+
+Liệt kê những file cần tạo hoặc chỉnh sửa trước khi triển khai.
+
+Ưu tiên tái sử dụng code hiện có, không tạo hệ thống giỏ hàng thứ hai gây xung đột.
+
+Không tự ý xóa hoặc ghi đè code của thành viên khác.
+
+BƯỚC 2 — CHỨC NĂNG THÊM VÀO GIỎ HÀNG
+
+Tích hợp chức năng "Thêm vào giỏ hàng" trên trang Shop và trang chi tiết sản phẩm.
+
+Yêu cầu:
+
+Nhấn "Thêm vào giỏ" thì sản phẩm được thêm ngay.
+
+Không tải lại trang.
+
+Nếu sản phẩm đã tồn tại, tăng số lượng thay vì tạo dòng trùng.
+
+Lưu giỏ hàng vào localStorage.
+
+Hiển thị thông báo thêm thành công.
+
+Cập nhật số lượng sản phẩm trên biểu tượng giỏ hàng ở header.
+
+Không cho thêm sản phẩm không hợp lệ hoặc vượt quá tồn kho nếu dữ liệu có quản lý tồn kho.
+
+Không dùng tên sản phẩm làm khóa định danh; sử dụng productId ổn định.
+
+BƯỚC 3 — GIAO DIỆN GIỎ HÀNG
+
+Thay thế hoàn toàn phần thông báo "Đang phát triển" bằng giao diện giỏ hàng thực tế.
+
+Mỗi sản phẩm hiển thị:
+
+Hình ảnh.
+
+Tên sản phẩm.
+
+Giá bán.
+
+Giá gốc và mức giảm nếu có.
+
+Số lượng.
+
+Thành tiền.
+
+Nút tăng số lượng.
+
+Nút giảm số lượng.
+
+Nút xóa sản phẩm.
+
+Yêu cầu:
+
+Thay đổi số lượng thì tổng tiền cập nhật ngay.
+
+Không cần F5.
+
+Xóa sản phẩm phải cập nhật giỏ hàng và localStorage.
+
+Có trạng thái giỏ hàng trống với nút "Tiếp tục mua sắm".
+
+Giao diện responsive trên desktop, tablet và mobile.
+
+Sử dụng thiết kế đồng bộ với website hiện có.
+
+BƯỚC 4 — TÍNH TOÁN GIỎ HÀNG
+
+Xây dựng hoặc tái sử dụng một hàm tính tổng tiền tập trung.
+
+Các thành phần:
+
+Subtotal: tổng giá các sản phẩm nhân số lượng.
+
+Discount: số tiền giảm từ voucher.
+
+Tax: thuế theo cấu hình của dự án.
+
+Shipping Fee: phí vận chuyển.
+
+Grand Total: tổng thanh toán.
+
+Công thức đề xuất:
+
+Grand Total = max(0, Subtotal - Discount + Tax + Shipping Fee)
+
+Nếu voucher miễn phí vận chuyển, phần giảm phí ship phải được tính đúng một lần và không bị trừ trùng.
+
+Không tự đặt thuế suất nếu dự án chưa có quy định; hãy hỏi tôi trước khi bổ sung thuế mới.
+
+Sử dụng Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }) để định dạng tiền.
+
+Không cho tổng thanh toán âm.
+
+Không sử dụng giá sản phẩm lấy trực tiếp từ dữ liệu không tin cậy trong localStorage làm nguồn giá chính; đối chiếu với danh mục sản phẩm hiện có.
+
+BƯỚC 5 — TÍCH HỢP VOUCHER
+
+Tái sử dụng module Voucher & Khuyến mãi đã xây dựng.
+
+Yêu cầu:
+
+Có ô nhập mã giảm giá.
+
+Có nút "Áp dụng".
+
+Có nút "Hủy voucher".
+
+Hiển thị mã đang áp dụng.
+
+Kiểm tra voucher còn hạn.
+
+Kiểm tra giá trị đơn hàng tối thiểu.
+
+Tính đúng mức giảm.
+
+Chỉ áp dụng một voucher cho một đơn.
+
+Khi thay đổi số lượng sản phẩm, tiền giảm tự tính lại.
+
+Khi voucher không còn đủ điều kiện, thông báo và cập nhật tổng đúng.
+
+Test bắt buộc:
+
+Subtotal = 1.000.000đ.
+
+Áp dụng LHU2026 giảm 10%.
+
+Discount = 100.000đ.
+
+Nếu phí ship là 30.000đ và thuế bằng 0 thì tổng thanh toán = 930.000đ.
+
+Nếu dự án đã có quy tắc thuế hoặc phí ship khác, phải sử dụng quy tắc hiện có và giải thích kết quả.
+
+Không viết lại module Voucher nếu đã có hàm xử lý đúng; hãy tái sử dụng.
+
+BƯỚC 6 — TRANG CHECKOUT / THANH TOÁN
+
+Tạo hoặc hoàn thiện trang Checkout.
+
+Form thông tin gồm:
+
+Họ tên người nhận.
+
+Số điện thoại.
+
+Email (tùy chọn).
+
+Địa chỉ nhận hàng.
+
+Tỉnh/thành phố.
+
+Ghi chú đơn hàng.
+
+Phương thức thanh toán demo.
+
+Phương thức thanh toán:
+
+Thanh toán khi nhận hàng (COD).
+
+Chuyển khoản mô phỏng nếu giao diện cần.
+
+Không tích hợp thanh toán thật, không yêu cầu nhập số thẻ hoặc dữ liệu ngân hàng nhạy cảm.
+
+Kiểm tra:
+
+Không được bỏ trống thông tin bắt buộc.
+
+Số điện thoại có định dạng hợp lệ.
+
+Giỏ hàng không được rỗng.
+
+Không tạo đơn hàng hai lần khi nhấn nút liên tục.
+
+Hiển thị thông báo lỗi cụ thể cho từng trường.
+
+BƯỚC 7 — TẠO ĐƠN HÀNG SAU CHECKOUT
+
+Khi người dùng xác nhận đặt hàng:
+
+Kiểm tra dữ liệu checkout.
+
+Kiểm tra lại sản phẩm, số lượng và tổng tiền.
+
+Tạo mã đơn hàng demo duy nhất, ví dụ LHU-2026-XXXXXX.
+
+Tạo đối tượng đơn hàng theo cấu trúc đang dùng trong Order Tracking.
+
+Lưu snapshot sản phẩm, số lượng, đơn giá, voucher, tiền giảm, thuế, phí ship và tổng thanh toán tại thời điểm đặt.
+
+Lưu thông tin giao hàng demo.
+
+Gán trạng thái ban đầu "Đặt hàng thành công" hoặc trạng thái tương ứng trong module Tracking.
+
+Lưu đơn hàng vào localStorage bằng cơ chế hiện có.
+
+Chỉ xóa giỏ hàng sau khi lưu đơn thành công.
+
+Hiển thị trang "Đặt hàng thành công".
+
+Cho phép nhấn "Theo dõi đơn hàng" để chuyển đến đúng đơn vừa tạo.
+
+Không tạo cấu trúc dữ liệu mới không tương thích với Order Tracking.
+
+Nếu module Order Tracking đã có khóa localStorage và hàm quản lý đơn hàng, hãy tái sử dụng.
+
+BƯỚC 8 — ĐỒNG BỘ GIỮA CÁC TRANG
+
+Bảo đảm:
+
+Thêm sản phẩm từ Shop → Cart hiển thị đúng.
+
+Số lượng giỏ hàng trên header được cập nhật.
+
+Thay đổi Cart → Checkout nhận tổng mới.
+
+Áp dụng Voucher → Checkout hiển thị đúng giảm giá.
+
+Đặt hàng → Order Tracking tìm được đơn.
+
+Đặt hàng → Lịch sử mua hàng hiển thị đơn mới.
+
+F5 không mất giỏ hàng chưa đặt.
+
+Không tự xóa lịch sử đánh giá, voucher hoặc đấu giá.
+
+Sử dụng sự kiện hoặc cơ chế đồng bộ phù hợp với JavaScript thuần.
+
+BƯỚC 9 — CHẤT LƯỢNG UI/UX
+
+Đồng bộ màu sắc và bố cục website.
+
+Có loading/disabled state khi xác nhận đặt hàng.
+
+Có thông báo thành công/thất bại.
+
+Có xác nhận trước khi xóa toàn bộ giỏ nếu cần.
+
+Form có label rõ ràng.
+
+Hỗ trợ thao tác bàn phím.
+
+Dùng DOM API an toàn, không chèn trực tiếp dữ liệu người dùng vào innerHTML.
+
+Không có lỗi JavaScript trong Console.
+
+Responsive trên điện thoại.
+
+Không sử dụng thư viện ngoài nếu không cần thiết.
+
+BƯỚC 10 — KIỂM THỬ TOÀN BỘ LUỒNG
+
+Thực hiện các test case:
+
+Thêm sản phẩm từ Shop vào giỏ.
+
+Thêm lại cùng sản phẩm → tăng số lượng.
+
+Tăng/giảm số lượng → thành tiền đúng.
+
+Xóa sản phẩm → tổng cập nhật.
+
+F5 → giỏ hàng vẫn tồn tại.
+
+Giỏ hàng trống → không checkout được.
+
+Áp dụng LHU2026 → giảm đúng 10%.
+
+Nhập voucher sai → hiển thị lỗi.
+
+Thay đổi số lượng → tính lại voucher.
+
+Checkout thiếu thông tin → không tạo đơn.
+
+Checkout hợp lệ → tạo đúng một đơn.
+
+Mã đơn hàng không bị trùng.
+
+Đơn mới hiển thị trong Order Tracking.
+
+Đơn mới xuất hiện trong lịch sử mua hàng.
+
+Tổng tiền của đơn không thay đổi sau khi đặt.
+
+Không ảnh hưởng Review, Voucher và Auction.
+
+Không có lỗi Console.
+
+Giao diện hoạt động tốt trên mobile.
+
+Chỉ báo cáo test case đã thực sự chạy.
+
+BƯỚC 11 — BÁO CÁO KẾT QUẢ
+
+Sau khi hoàn thành:
+
+Liệt kê các file đã tạo và chỉnh sửa.
+
+Giải thích cấu trúc dữ liệu giỏ hàng.
+
+Giải thích cách tính tiền.
+
+Giải thích cách tích hợp Voucher.
+
+Giải thích cách tạo đơn và tích hợp Tracking.
+
+Hướng dẫn chạy thử từ Shop đến đặt hàng thành công.
+
+Báo cáo test case đạt/chưa đạt.
+
+Nêu các vấn đề còn tồn tại.
+
+Viết nội dung tóm tắt Prompt 05 để tôi ghi vào prompt_log.md.
+
+Gợi ý ảnh chụp minh chứng cho báo cáo đồ án.
+
+QUY TẮC BẮT BUỘC:
+
+Không tạo một website mới.
+
+Không tự ý xóa hoặc ghi đè code của thành viên khác.
+
+Không tự động commit, push, merge hoặc chuyển nhánh Git.
+
+Không thay đổi kiến trúc dự án khi chưa cần thiết.
+
+Ưu tiên tái sử dụng module Voucher và Tracking hiện có.
+
+Nếu phát hiện xung đột, hãy hỏi tôi trước khi sửa.
+
+Chỉ xác nhận hoàn thành khi các chức năng đã thực sự hoạt động.
 ## Prompt 06 — Hồ sơ và phiên người dùng demo
 **Ngày thực hiện**: 24/10/2026
 
