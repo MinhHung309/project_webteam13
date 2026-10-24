@@ -6,6 +6,83 @@ import { STORAGE_KEYS } from "../utils/storage.js";
 import { getCartTotalQuantity, CART_UPDATED_EVENT } from "../utils/cart.js";
 import { AUTH_UPDATED_EVENT, getCurrentUser, logout } from "./auth.js";
 
+const NAV_ITEMS = [
+  { label: "Trang chủ", path: "index.html", pages: ["index.html"] },
+  { label: "Sản phẩm", path: "pages/products.html", pages: ["products.html", "product-detail.html"] },
+  { label: "Voucher", path: "pages/vouchers.html", pages: ["vouchers.html"] },
+  { label: "Theo dõi đơn", path: "pages/order-tracking.html", pages: ["order-tracking.html"] },
+  { label: "Đấu giá", path: "pages/auction.html", pages: ["auction.html", "auction-detail.html", "my-auctions.html"] },
+  { label: "Đánh giá", path: "pages/reviews.html", pages: ["reviews.html"] }
+];
+
+function sitePageUrl(path) {
+  return new URL(path, new URL("../../", import.meta.url)).href;
+}
+
+function createElement(tagName, className, text) {
+  const element = document.createElement(tagName);
+  if (className) element.className = className;
+  if (text !== undefined) element.textContent = text;
+  return element;
+}
+
+function renderHeader() {
+  const header = document.querySelector(".site-header");
+  if (!header) {
+    throw new Error("Không tìm thấy phần tử .site-header để khởi tạo điều hướng.");
+  }
+
+  const container = createElement("div", "container header-container");
+  const logo = createElement("a", "brand-logo");
+  logo.href = sitePageUrl("index.html");
+  logo.setAttribute("aria-label", "LHU E-Shop Trang chủ");
+  logo.append(
+    createElement("span", "logo-icon", "LHU"),
+    createElement("span", "", "E-Shop")
+  );
+
+  const menuToggle = createElement("button", "menu-toggle", "☰");
+  menuToggle.type = "button";
+  menuToggle.id = "menuToggle";
+  menuToggle.setAttribute("aria-label", "Mở menu điều hướng");
+  menuToggle.setAttribute("aria-expanded", "false");
+  menuToggle.setAttribute("aria-controls", "mainNav");
+
+  const mainNav = createElement("nav", "main-nav");
+  mainNav.id = "mainNav";
+  mainNav.setAttribute("aria-label", "Điều hướng chính");
+  const navList = createElement("ul", "nav-list");
+  const currentPage = window.location.pathname.split("/").pop().toLowerCase();
+
+  NAV_ITEMS.forEach(item => {
+    const listItem = document.createElement("li");
+    const link = createElement("a", "nav-link", item.label);
+    link.href = sitePageUrl(item.path);
+    if (item.pages.includes(currentPage)) {
+      link.classList.add("active");
+      link.setAttribute("aria-current", "page");
+    }
+    listItem.append(link);
+    navList.append(listItem);
+  });
+  mainNav.append(navList);
+
+  const headerActions = createElement("div", "header-actions");
+  const cartLink = createElement("a", "action-link");
+  cartLink.href = sitePageUrl("pages/cart.html");
+  cartLink.setAttribute("aria-label", "Giỏ hàng của bạn");
+  cartLink.append(
+    createElement("span", "", "🛒"),
+    createElement("span", "", "Giỏ hàng"),
+    createElement("span", "cart-counter", "0")
+  );
+  cartLink.lastElementChild.id = "cartCount";
+  headerActions.append(cartLink);
+
+  container.append(logo, menuToggle, mainNav, headerActions);
+  header.replaceChildren(container);
+}
+
 /**
  * Cập nhật số lượng hiển thị trên icon giỏ hàng (cart badge)
  */
@@ -21,6 +98,7 @@ export function updateCartBadge() {
  * Khởi tạo navigation, sự kiện menu mobile và đồng bộ badge giỏ hàng thời gian thực
  */
 export function initNavigation() {
+  renderHeader();
   const menuToggle = document.getElementById("menuToggle");
   const mainNav = document.getElementById("mainNav");
   const headerActions = document.querySelector(".header-actions");
@@ -116,6 +194,7 @@ function renderAccountActions(headerActions) {
     [
       ["Tài khoản của tôi", "profile.html"],
       ["Đơn hàng của tôi", "order-tracking.html"],
+      ["Lịch sử mua hàng", "order-tracking.html#order-history"],
       ["Voucher của tôi", "vouchers.html?tab=wallet"],
       ["Đấu giá của tôi", "my-auctions.html"]
     ].forEach(([label, path]) => {
@@ -142,4 +221,3 @@ function renderAccountActions(headerActions) {
 
   headerActions.append(accountActions);
 }
-
