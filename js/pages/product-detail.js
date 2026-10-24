@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Module xử lý tương tác trên Trang Chi Tiết Sản Phẩm & Đánh Giá
  * Kết nối giữa giao diện HTML và module logic js/modules/reviews.js
  */
@@ -489,7 +489,7 @@ function setupReviewForm() {
   form.addEventListener("submit", (e) => {
     e.preventDefault();
     if (!getCurrentUser()) {
-      showToast("Đăng nhập bằng hồ sơ demo để gắn đánh giá với userId của bạn.", "error");
+      showToast("Vui lòng đăng nhập để gửi đánh giá sản phẩm.", "error");
       return;
     }
 
@@ -667,3 +667,4 @@ function escapeHtml(str) {
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#039;");
 }
+

@@ -81,12 +81,12 @@ function saveProfile(event) {
   }
   fillProfile(result.user);
   setEditing(false);
-  setFeedback("Đã lưu hồ sơ demo.", "success");
+  setFeedback("Cập nhật thông tin tài khoản thành công!", "success");
 }
 
 function handleLogout() {
   if (!logout()) {
-    setFeedback("Không thể xóa phiên demo khỏi bộ nhớ trình duyệt.", "error");
+    setFeedback("Không thể đăng xuất vào lúc này. Vui lòng thử lại.", "error");
     return;
   }
   window.location.assign("../index.html");
@@ -140,9 +140,13 @@ function capitalize(value) {
   return value.charAt(0).toUpperCase() + value.slice(1);
 }
 
-function formatDate(value) {
-  const date = new Date(value);
-  return Number.isFinite(date.getTime())
-    ? new Intl.DateTimeFormat("vi-VN", { dateStyle: "long" }).format(date)
-    : "Không xác định";
+function formatDate(isoString) {
+  if (!isoString) return "";
+  const date = new Date(isoString);
+  if (isNaN(date.getTime())) return isoString;
+  return date.toLocaleDateString("vi-VN", {
+    year: "numeric",
+    month: "long",
+    day: "numeric"
+  });
 }

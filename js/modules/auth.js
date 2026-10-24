@@ -47,7 +47,7 @@ function getSession(storage, key) {
   try {
     raw = storage.getItem(key);
   } catch (error) {
-    console.error("[Auth] Không thể đọc phiên demo.", error);
+    console.error("[Auth] Không thể đọc phiên đăng nhập.", error);
     return null;
   }
   if (raw === null) return null;
@@ -66,11 +66,11 @@ function getSession(storage, key) {
     }
     return session;
   } catch (error) {
-    console.warn("[Auth] Dữ liệu phiên demo không hợp lệ; đã xóa phiên lỗi.", error);
+    console.warn("[Auth] Dữ liệu phiên đăng nhập không hợp lệ; đã dọn dẹp phiên lỗi.", error);
     try {
       storage.removeItem(key);
     } catch (removeError) {
-      console.error("[Auth] Không thể xóa phiên demo bị lỗi.", removeError);
+      console.error("[Auth] Không thể xóa phiên đăng nhập bị lỗi.", removeError);
     }
     return null;
   }
@@ -84,7 +84,7 @@ function findSessionUser(storage, key) {
     try {
       storage.removeItem(key);
     } catch (error) {
-      console.error("[Auth] Không thể xóa phiên không còn hồ sơ.", error);
+      console.error("[Auth] Không thể xóa phiên không còn tài khoản tương ứng.", error);
     }
   }
   return user || null;
@@ -107,7 +107,7 @@ export function registerDemoUser(profile) {
   }
   const users = readUsers();
   if (users.some(user => user.email === email)) {
-    return { success: false, message: "Email này đã được đăng ký hồ sơ demo." };
+    return { success: false, message: "Email này đã được sử dụng. Vui lòng đăng nhập hoặc dùng email khác." };
   }
   const user = {
     id: makeUserId(),
@@ -118,7 +118,7 @@ export function registerDemoUser(profile) {
     createdAt: new Date().toISOString()
   };
   if (!setStorageItem(STORAGE_KEYS.DEMO_USERS, [...users, user])) {
-    return { success: false, message: "Không thể lưu hồ sơ demo vào bộ nhớ trình duyệt." };
+    return { success: false, message: "Không thể lưu thông tin tài khoản vào bộ nhớ trình duyệt." };
   }
   return { success: true, user: { ...user } };
 }
@@ -130,13 +130,13 @@ export function getCurrentUser() {
       return findSessionUser(window.sessionStorage, STORAGE_KEYS.DEMO_SESSION);
     }
   } catch (error) {
-    console.error("[Auth] Không thể truy cập phiên demo tạm thời.", error);
+    console.error("[Auth] Không thể truy cập phiên đăng nhập tạm thời.", error);
     return null;
   }
   try {
     return findSessionUser(window.localStorage, STORAGE_KEYS.DEMO_REMEMBERED_SESSION);
   } catch (error) {
-    console.error("[Auth] Không thể truy cập phiên demo được ghi nhớ.", error);
+    console.error("[Auth] Không thể truy cập phiên đăng nhập được ghi nhớ.", error);
     return null;
   }
 }
@@ -154,7 +154,7 @@ export function startDemoSession(userId, remember = false) {
     key = remember ? STORAGE_KEYS.DEMO_REMEMBERED_SESSION : STORAGE_KEYS.DEMO_SESSION;
     storage.setItem(key, JSON.stringify({ version: 1, userId }));
   } catch (error) {
-    console.error("[Auth] Không thể lưu trạng thái phiên demo.", error);
+    console.error("[Auth] Không thể lưu trạng thái phiên đăng nhập.", error);
     return false;
   }
   dispatchAuthUpdated();
@@ -166,13 +166,13 @@ export function logout(notify = true) {
   try {
     window.sessionStorage.removeItem(STORAGE_KEYS.DEMO_SESSION);
   } catch (error) {
-    console.error("[Auth] Không thể xóa phiên demo tạm thời.", error);
+    console.error("[Auth] Không thể xóa phiên đăng nhập tạm thời.", error);
     success = false;
   }
   try {
     window.localStorage.removeItem(STORAGE_KEYS.DEMO_REMEMBERED_SESSION);
   } catch (error) {
-    console.error("[Auth] Không thể xóa phiên demo được ghi nhớ.", error);
+    console.error("[Auth] Không thể xóa phiên đăng nhập được ghi nhớ.", error);
     success = false;
   }
   if (notify) dispatchAuthUpdated();
@@ -186,12 +186,12 @@ export function isLoggedIn() {
 export function updateCurrentUser(changes) {
   const currentUser = getCurrentUser();
   if (!currentUser || !changes || typeof changes !== "object") {
-    return { success: false, message: "Không tìm thấy hồ sơ demo đang đăng nhập." };
+    return { success: false, message: "Vui lòng đăng nhập để tiếp tục." };
   }
   const users = readUsers();
   const index = users.findIndex(user => user.id === currentUser.id);
   if (index < 0) {
-    return { success: false, message: "Hồ sơ demo không còn tồn tại." };
+    return { success: false, message: "Tài khoản không tồn tại trên hệ thống." };
   }
 
   const fullName = typeof changes.fullName === "string" ? changes.fullName.trim() : "";
@@ -205,7 +205,7 @@ export function updateCurrentUser(changes) {
     return { success: false, field: "email", message: "Email chưa đúng định dạng." };
   }
   if (users.some(user => user.id !== currentUser.id && user.email === email)) {
-    return { success: false, field: "email", message: "Email này đã được hồ sơ khác sử dụng." };
+    return { success: false, field: "email", message: "Email này đã được tài khoản khác sử dụng." };
   }
   const phoneDigits = phone.replace(/\D/g, "");
   if (phone && (!/^[+\d()\s.-]{8,20}$/.test(phone) || phoneDigits.length < 8 || phoneDigits.length > 15)) {
@@ -218,7 +218,7 @@ export function updateCurrentUser(changes) {
   const updatedUser = { ...currentUser, fullName, email, phone, address };
   users[index] = updatedUser;
   if (!setStorageItem(STORAGE_KEYS.DEMO_USERS, users)) {
-    return { success: false, message: "Không thể lưu thay đổi hồ sơ vào bộ nhớ trình duyệt." };
+    return { success: false, message: "Không thể lưu thông tin thay đổi vào bộ nhớ trình duyệt." };
   }
   dispatchAuthUpdated();
   return { success: true, user: { ...updatedUser } };
